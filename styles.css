@@ -1,147 +1,117 @@
-/* General Styling */
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 20px;
-    background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  text-align: center;
 }
 
 h1 {
-    margin-bottom: 20px;
-    color: #333;
+  margin-top: 20px;
+  color: #343a40;
 }
 
-/* Control Section */
-.controls, .add-participant {
-    margin: 20px 0;
+.container {
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-select, button, input {
-    margin: 5px;
-    padding: 8px 12px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+.controls {
+  margin: 20px 0;
 }
 
-/* Wheel Styling */
-#wheel-container {
-    position: relative;
-    width: 400px;
-    height: 400px;
-    margin: 30px auto;
+.controls label {
+  font-size: 16px;
+  margin-right: 10px;
 }
 
-/* Wheel Layout */
-#wheel {
-    position: relative;
-    width: 400px;
-    height: 400px;
-    margin: 20px auto;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 5px solid #000;
-    transform-origin: center;
-    cursor: pointer;
+.controls select,
+.controls button {
+  font-size: 16px;
+  padding: 5px 10px;
+  margin: 5px;
 }
 
-/* Wheel Segments */
-.segment {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    clip-path: polygon(50% 50%, 100% 0%, 100% 100%);
-    transform-origin: 50% 50%;
+#add-container {
+  margin: 20px 0;
 }
 
-/* Text on Segments */
-.segment-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform-origin: center;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-    pointer-events: none;
-}
-
-/* Buttons and Winner Area */
-#winner-container {
-    text-align: center;
-    margin-top: 20px;
-}
-
-#winner-container p {
-    font-size: 1.2em;
-    font-weight: bold;
-}
-
-.btn {
-    margin: 5px;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.btn-danger {
-    background-color: #d9534f;
-    color: #fff;
-}
-
-.btn-secondary {
-    background-color: #5bc0de;
-    color: #fff;
-}
-
-
-.segment div {
-    position: absolute;
-    width: 50%;
-    height: 50%;
-    background: inherit;
-    top: 50%;
-    left: 50%;
-    transform-origin: bottom right;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 14px;
-    color: white;
-    font-weight: bold;
-}
-
-/* Pointer Styling */
-#pointer {
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-left: 25px solid transparent;
-    border-right: 25px solid transparent;
-    border-bottom: 50px solid #333;
-    transform: translateX(-50%);
-}
-
-/* Result and Record */
-#result {
-    margin-top: 20px;
-    font-size: 18px;
-    font-weight: bold;
+#add-container input,
+#add-container select,
+#add-container button {
+  font-size: 16px;
+  padding: 5px 10px;
+  margin: 5px;
 }
 
 #record {
-    margin-top: 30px;
-    text-align: left;
-    margin-left: 10%;
-    margin-right: 10%;
-    border: 1px solid #ccc;
-    padding: 10px;
-    background-color: #fff;
-    font-size: 16px;
-    border-radius: 8px;
+  margin: 20px 0;
+  text-align: left;
+  padding: 0 20px;
+}
+
+/* Wheel Container */
+#wheel-container {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  margin: 20px auto;
+}
+
+#wheel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  transform: rotate(0deg);
+  transition: transform 5s ease-out;
+}
+
+.segment {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  background-size: cover;
+  background-position: center;
+  clip-path: polygon(50% 50%, 0% 100%, 100% 100%);
+  transform-origin: 100% 100%;
+}
+
+/* Winner Container */
+#winner-container {
+  margin: 20px 0;
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  background-color: #fff;
+  border-radius: 5px;
+}
+
+#winner-container img {
+  display: block;
+  margin: 10px auto;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+#winner-container button {
+  margin: 10px 5px;
+  padding: 5px 10px;
+  font-size: 16px;
+}
+
+.btn {
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #0056b3;
 }
