@@ -4,72 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucky Draw Wheel</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            margin-bottom: 20px;
-        }
-        select, button {
-            margin: 10px;
-        }
-        #wheel {
-            margin-top: 20px;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            border: 5px solid #333;
-            position: relative;
-            overflow: hidden;
-        }
-        #pointer {
-            width: 0; 
-            height: 0; 
-            border-left: 25px solid transparent;
-            border-right: 25px solid transparent;
-            border-bottom: 50px solid #333;
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .segment {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            background: lightblue;
-            transform-origin: 100% 100%;
-            clip-path: polygon(100% 100%, 0 100%, 100% 0);
-        }
-        #result {
-            margin-top: 20px;
-            font-size: 20px;
-            text-align: center;
-        }
-        #spinBtn {
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Lucky Draw Wheel</h1>
-    <label for="gender">Choose gender:</label>
-    <select id="gender">
-        <option value="all">All</option>
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-    </select>
-    <button id="spinBtn" onclick="spin()">Spin</button>
-    <div id="wheel">
-        <div id="pointer"></div>
+
+    <!-- Control Section -->
+    <div class="controls">
+        <label for="gender">Choose gender:</label>
+        <select id="gender">
+            <option value="all">All</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+        <button id="spinBtn">Spin</button>
+        <button id="resetBtn">Reset</button>
     </div>
-    <div id="result"></div>
+
+    <!-- Add Participants Section -->
+    <div class="add-participant">
+        <input id="nameInput" placeholder="Enter name" type="text">
+        <select id="genderInput">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+        <button id="addBtn">Add Participant</button>
+    </div>
+
+    <!-- Wheel Section -->
+    <div id="wheel-container">
+        <div id="pointer"></div>
+        <div id="wheel"></div>
+    </div>
+
+    <!-- Winner Section -->
+    <div id="result">Winner: <span id="winner-name">---</span></div>
+
+    <!-- Record Section -->
+    <div id="record">Drawn Participants:</div>
 
     <script src="script.js"></script>
 </body>
