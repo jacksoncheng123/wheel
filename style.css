@@ -8,20 +8,17 @@ h1 {
     margin-bottom: 20px;
 }
 
-#pool {
+.pool {
     position: relative;
     width: 100%;
     max-width: 600px;
     height: 400px;
-    background-color: blue; /* Blue pool background */
+    background: radial-gradient(circle at center, #6ccff6, #1e90ff);
     border: 2px solid #333;
     margin: 20px auto;
     overflow: hidden;
     border-radius: 10px;
-}
-
-#addParticipantForm input, #addParticipantForm select, #addParticipantForm button {
-    margin: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 255, 0.5);
 }
 
 .fish {
@@ -31,6 +28,10 @@ h1 {
     background-size: cover;
     border-radius: 50%;
     cursor: pointer;
+}
+
+#addParticipantForm input, #addParticipantForm select, #addParticipantForm button {
+    margin: 10px;
 }
 
 #winnerContainer {
