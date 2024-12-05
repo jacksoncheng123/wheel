@@ -31,7 +31,7 @@ function renderWheel() {
   filteredParticipants.forEach((participant, index) => {
     const segment = document.createElement('div');
     segment.className = 'segment';
-    segment.style.backgroundImage = `url(images/${participant.classNumber}.jpg)`;
+    segment.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
     segment.style.transform = `rotate(${index * segmentAngle}deg) skewY(-${90 - segmentAngle}deg)`;
     wheel.appendChild(segment);
   });
