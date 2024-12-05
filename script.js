@@ -26,6 +26,7 @@ function createSegments(participantList) {
         segment.style.clipPath = 'circle(50%)';
 
         const text = document.createElement('div');
+        text.className = 'segment-text';
         text.innerText = participant.name;
         text.style.transform = `rotate(${sliceAngle / 2}deg)`;
 
@@ -34,7 +35,7 @@ function createSegments(participantList) {
     });
 }
 
-// Spin the wheel
+// Spin the wheel when clicked
 function spin() {
     const gender = document.getElementById('gender').value;
 
@@ -53,6 +54,7 @@ function spin() {
     const winner = filteredParticipants[winnerIndex];
     const wheel = document.getElementById('wheel');
 
+    // Spin animation
     wheel.style.transition = 'none';
     wheel.style.transform = 'rotate(0deg)';
     setTimeout(() => {
@@ -61,22 +63,36 @@ function spin() {
         wheel.style.transform = `rotate(${rotation}deg)`;
 
         setTimeout(() => {
-            // Display winner message in the confirmation dialog
-            const removeWinner = confirm(`Winner: ${winner.name}\n\nDo you want to remove this participant from the pool?`);
-
-            if (removeWinner) {
-                participants = participants.filter(p => p.name !== winner.name);
-            }
-
-            drawnParticipants.push(winner.name);
-            updateDrawnRecord();
-
-            createSegments(participants);
+            displayWinner(winner, winnerIndex, filteredParticipants);
         }, 5000);
     }, 100);
 }
 
-// Update the drawn record
+// Display winner and ask to remove
+function displayWinner(winner, winnerIndex, filteredParticipants) {
+    const winnerContainer = document.getElementById('winner-container');
+    winnerContainer.innerHTML = `
+        <p>Winner: <strong>${winner.name}</strong></p>
+        <button id="remove-btn" class="btn btn-danger">Remove from Pool</button>
+        <button id="keep-btn" class="btn btn-secondary">Keep in Pool</button>
+    `;
+
+    document.getElementById('remove-btn').addEventListener('click', () => {
+        participants = participants.filter(p => p.name !== winner.name);
+        drawnParticipants.push(winner.name);
+        updateDrawnRecord();
+        winnerContainer.innerHTML = '<p>Winner decision recorded!</p>';
+        createSegments(participants);
+    });
+
+    document.getElementById('keep-btn').addEventListener('click', () => {
+        drawnParticipants.push(winner.name);
+        updateDrawnRecord();
+        winnerContainer.innerHTML = '<p>Winner decision recorded!</p>';
+    });
+}
+
+// Update the drawn participants record
 function updateDrawnRecord() {
     const record = document.getElementById('record');
     record.innerHTML = 'Drawn Participants:<br>';
@@ -100,7 +116,7 @@ function addParticipant() {
     document.getElementById('nameInput').value = '';
 }
 
-// Reset the wheel
+// Reset the wheel and participants
 function resetWheel() {
     fetch('participants.json')
         .then(response => response.json())
@@ -109,11 +125,12 @@ function resetWheel() {
             drawnParticipants = [];
             updateDrawnRecord();
             createSegments(participants);
-            document.getElementById('winner-name').innerText = '---';
+            document.getElementById('winner-container').innerHTML = '<p>No winner yet!</p>';
         })
         .catch(error => console.error('Error resetting participants:', error));
 }
 
-document.getElementById('spinBtn').addEventListener('click', spin);
+// Add event listeners for tap-to-spin
+document.getElementById('wheel').addEventListener('click', spin);
 document.getElementById('resetBtn').addEventListener('click', resetWheel);
 document.getElementById('addBtn').addEventListener('click', addParticipant);
