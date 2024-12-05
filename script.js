@@ -4,14 +4,14 @@ const pool = document.getElementById("pool");
 const genderSelect = document.getElementById("gender");
 const winnerContainer = document.getElementById("winnerContainer");
 const winnerMessage = document.getElementById("winnerMessage");
+const addParticipantForm = document.getElementById("addParticipantForm");
 
 // Fetch participants from participants.json
 fetch("participants.json")
     .then(response => response.json())
     .then(data => {
-        console.log("Participants loaded:", data);  // Debugging: Check participants data
         participants = data;
-        renderPool();  // Call to render the pool after data is fetched
+        renderPool(); // Call to render the pool after data is fetched
     })
     .catch(error => console.error("Error loading participants:", error));
 
@@ -30,8 +30,6 @@ function renderPool() {
         return;
     }
 
-    console.log("Filtered Participants:", filteredParticipants);  // Debugging: Log filtered participants
-
     filteredParticipants.forEach(participant => {
         const fish = document.createElement("div");
         fish.className = "fish";
@@ -48,22 +46,51 @@ function renderPool() {
             fish.style.top = `${Math.random() * 90}%`;
             fish.style.left = `${Math.random() * 90}%`;
         }, 2000);
-
-        // Event listener for catching a fish
-        fish.addEventListener("click", () => catchFish(participant));
     });
 }
 
-// Handle catching a fish
-function catchFish(participant) {
-    displayWinner(participant);
-}
+// Add new participant to the pool
+addParticipantForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    const name = document.getElementById("participantName").value;
+    const gender = document.getElementById("participantGender").value;
+    const classNumber = document.getElementById("participantClassNumber").value || "99";
 
-// Display the winner
-function displayWinner(participant) {
-    winnerMessage.innerHTML = `Winner: ${participant.name}`;
+    const newParticipant = {
+        name: name,
+        gender: gender,
+        classNumber: classNumber
+    };
+
+    participants.push(newParticipant);
+    renderPool();  // Re-render the pool
+    addParticipantForm.reset();  // Reset the form
+});
+
+// Randomly draw a participant when pool is clicked
+pool.addEventListener("click", () => {
+    const filteredParticipants = 
+        genderSelect.value === "all"
+            ? participants
+            : participants.filter(p => p.gender === genderSelect.value);
+
+    if (filteredParticipants.length === 0) {
+        winnerMessage.innerHTML = "No participants available!";
+        winnerContainer.classList.remove("hidden");
+        return;
+    }
+
+    const winnerIndex = Math.floor(Math.random() * filteredParticipants.length);
+    const winner = filteredParticipants[winnerIndex];
+
+    displayWinner(winner);
+});
+
+// Display the winner and show the option to remove or keep
+function displayWinner(winner) {
+    winnerMessage.innerHTML = `Winner: ${winner.name}, Class Number: ${winner.classNumber}`;
     winnerContainer.classList.remove("hidden");
-    winnerContainer.dataset.classNumber = participant.classNumber;
+    winnerContainer.dataset.classNumber = winner.classNumber;
 }
 
 // Remove the winner from the pool
