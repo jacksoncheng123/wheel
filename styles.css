@@ -18,7 +18,7 @@ h1 {
     width: 100%;
     max-width: 600px;
     height: 400px;
-    background-color: #cce7ff;
+    background-color: lightgray;  /* Add background color for debugging */
     border: 2px solid #333;
     margin: 20px auto;
     overflow: hidden;
