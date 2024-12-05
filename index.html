@@ -1,38 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fishing Lucky Draw</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Draw Fishing Pool</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Fishing Lucky Draw</h1>
-    <div class="controls">
-      <label for="gender">Choose gender:</label>
-      <select id="gender">
+    <h1>Lucky Draw: Fishing Pool</h1>
+    <label for="gender">Choose gender:</label>
+    <select id="gender">
         <option value="all">All</option>
         <option value="male">Male</option>
         <option value="female">Female</option>
-      </select>
-      <button id="resetBtn" class="btn">Reset</button>
+    </select>
+    <button onclick="renderPool()">Refresh Pool</button>
+
+    <div id="pool"></div>
+
+    <div id="winnerContainer" class="hidden">
+        <p id="winnerMessage"></p>
+        <button id="removeButton" onclick="removeWinner()">Remove</button>
+        <button id="keepButton" onclick="keepWinner()">Keep</button>
     </div>
-    <div id="pool-container">
-      <div id="pool"></div>
-    </div>
-    <div id="winner-container">
-      <p>No winner yet!</p>
-    </div>
-    <div id="add-container">
-      <input type="text" id="nameInput" placeholder="Enter Name">
-      <select id="genderInput">
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-      </select>
-      <button id="addBtn" class="btn">Add Participant</button>
-    </div>
-  </div>
-  <script src="script.js"></script>
+
+    <script src="script.js"></script>
 </body>
 </html>
