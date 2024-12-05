@@ -28,7 +28,7 @@ function renderPool() {
   filteredParticipants.forEach(participant => {
     const fish = document.createElement('div');
     fish.className = 'fish';
-    fish.style.backgroundImage = `url(images/${participant.classNumber}.jpg)`;
+    fish.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
     fish.style.top = `${Math.random() * 90}%`;
     fish.style.left = `${Math.random() * 90}%`;
     fish.dataset.name = participant.name;
