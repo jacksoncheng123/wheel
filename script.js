@@ -59,7 +59,7 @@ function catchFish() {
 function displayWinner(winner) {
   winnerContainer.innerHTML = `
     <p>Winner: ${winner.name}</p>
-    <img src="images/${winner.classNumber}.jpg" alt="${winner.name}">
+    <img src="images/${winner.classNumber}.jpeg" alt="${winner.name}">
     <button onclick="removeWinner(${winner.classNumber})">Remove</button>
     <button onclick="closeWinner()">Keep</button>
   `;
