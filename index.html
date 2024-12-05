@@ -1,48 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky Draw Wheel</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucky Draw Wheel</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="container">
     <h1>Lucky Draw Wheel</h1>
-
-    <!-- Control Section -->
     <div class="controls">
-        <label for="gender">Choose gender:</label>
-        <select id="gender">
-            <option value="all">All</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
-        <button id="spinBtn">Spin</button>
-        <button id="resetBtn">Reset</button>
+      <label for="gender">Choose gender:</label>
+      <select id="gender">
+        <option value="all">All</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <button id="resetBtn" class="btn">Reset</button>
     </div>
-
-    <!-- Add Participants Section -->
-    <div class="add-participant">
-        <input id="nameInput" placeholder="Enter name" type="text">
-        <select id="genderInput">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
-        <button id="addBtn">Add Participant</button>
-    </div>
-
-    <!-- Wheel Section -->
     <div id="wheel-container">
-        <div id="pointer"></div>
-        <div id="wheel"></div>
+      <div id="wheel"></div>
     </div>
-
-    <!-- Winner Section -->
-    <div id="result">Winner: <span id="winner-name">---</span></div>
-
-    <!-- Record Section -->
-    <div id="record">Drawn Participants:</div>
-
-    <script src="script.js"></script>
+    <div id="winner-container">
+      <p>No winner yet!</p>
+    </div>
+    <div id="add-container">
+      <input type="text" id="nameInput" placeholder="Enter Name">
+      <select id="genderInput">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <button id="addBtn" class="btn">Add Participant</button>
+    </div>
+    <div id="record">
+      <h3>Drawn Participants:</h3>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
