@@ -1,104 +1,83 @@
-const pool = document.getElementById('pool');
-const genderSelect = document.getElementById('gender');
-const resetBtn = document.getElementById('resetBtn');
-const addBtn = document.getElementById('addBtn');
-const nameInput = document.getElementById('nameInput');
-const genderInput = document.getElementById('genderInput');
-const winnerContainer = document.getElementById('winner-container');
-
-// Default participants
-let participants = [
-  { name: 'John', gender: 'male', classNumber: 1 },
-  { name: 'Jane', gender: 'female', classNumber: 2 },
-  { name: 'Smith', gender: 'male', classNumber: 3 },
-  { name: 'Alice', gender: 'female', classNumber: 4 },
-];
-
+let participants = [];
 let fishes = [];
-let drawn = [];
+const pool = document.getElementById("pool");
+const genderSelect = document.getElementById("gender");
+const winnerContainer = document.getElementById("winnerContainer");
+const winnerMessage = document.getElementById("winnerMessage");
 
-// Function to render the pool
+// Fetch participants from participants.json
+fetch("participants.json")
+    .then(response => response.json())
+    .then(data => {
+        participants = data;
+        renderPool();
+    })
+    .catch(error => console.error("Error loading participants:", error));
+
+// Render the pool with fishes
 function renderPool() {
-  pool.innerHTML = '';
-  const filteredParticipants =
-    genderSelect.value === 'all'
-      ? participants
-      : participants.filter(p => p.gender === genderSelect.value);
+    pool.innerHTML = '';
+    fishes = [];
 
-  filteredParticipants.forEach(participant => {
-    const fish = document.createElement('div');
-    fish.className = 'fish';
-    fish.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
-    fish.style.top = `${Math.random() * 90}%`;
-    fish.style.left = `${Math.random() * 90}%`;
-    fish.dataset.name = participant.name;
-    fish.dataset.classNumber = participant.classNumber;
-    fish.dataset.gender = participant.gender;
-    pool.appendChild(fish);
-    fishes.push(fish);
+    const filteredParticipants =
+        genderSelect.value === "all"
+            ? participants
+            : participants.filter(p => p.gender === genderSelect.value);
 
-    // Add movement to fish
-    setInterval(() => {
-      fish.style.top = `${Math.random() * 90}%`;
-      fish.style.left = `${Math.random() * 90}%`;
-    }, 2000);
-  });
+    if (filteredParticipants.length === 0) {
+        pool.innerHTML = '<p>No participants in the pool!</p>';
+        return;
+    }
+
+    filteredParticipants.forEach(participant => {
+        const fish = document.createElement("div");
+        fish.className = "fish";
+        fish.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
+        fish.style.top = `${Math.random() * 90}%`;
+        fish.style.left = `${Math.random() * 90}%`;
+        fish.dataset.name = participant.name;
+        fish.dataset.classNumber = participant.classNumber;
+        pool.appendChild(fish);
+        fishes.push(fish);
+
+        // Add movement to fish
+        setInterval(() => {
+            fish.style.top = `${Math.random() * 90}%`;
+            fish.style.left = `${Math.random() * 90}%`;
+        }, 2000);
+
+        fish.addEventListener("click", () => catchFish(participant));
+    });
 }
 
-// Function to catch a random fish
-function catchFish() {
-  const randomIndex = Math.floor(Math.random() * fishes.length);
-  const fish = fishes[randomIndex];
-  const name = fish.dataset.name;
-  const classNumber = fish.dataset.classNumber;
-
-  displayWinner({ name, classNumber });
+// Handle catching a fish
+function catchFish(participant) {
+    displayWinner(participant);
 }
 
-// Function to display the winner
-function displayWinner(winner) {
-  winnerContainer.innerHTML = `
-    <p>Winner: ${winner.name}</p>
-    <img src="images/${winner.classNumber}.jpeg" alt="${winner.name}">
-    <button onclick="removeWinner(${winner.classNumber})">Remove</button>
-    <button onclick="closeWinner()">Keep</button>
-  `;
+// Display the winner
+function displayWinner(participant) {
+    winnerMessage.innerHTML = `Winner: ${participant.name}`;
+    winnerContainer.classList.remove("hidden");
+
+    // Attach participant details for removing later
+    winnerContainer.dataset.classNumber = participant.classNumber;
 }
 
-// Function to remove the winner
-function removeWinner(classNumber) {
-  participants = participants.filter(p => p.classNumber != classNumber);
-  closeWinner();
-  renderPool();
-}
-
-// Function to close winner modal
-function closeWinner() {
-  winnerContainer.innerHTML = '<p>No winner yet!</p>';
-}
-
-// Add participant
-addBtn.addEventListener('click', () => {
-  const name = nameInput.value;
-  const gender = genderInput.value;
-  const classNumber = participants.length + 1;
-
-  if (name) {
-    participants.push({ name, gender, classNumber });
-    nameInput.value = '';
+// Remove the winner from the pool
+function removeWinner() {
+    const classNumber = winnerContainer.dataset.classNumber;
+    participants = participants.filter(p => p.classNumber !== classNumber);
     renderPool();
-  }
-});
+    closeWinner();
+}
 
-// Event Listeners
-pool.addEventListener('click', catchFish);
-resetBtn.addEventListener('click', () => {
-  participants = [...drawn, ...participants];
-  drawn = [];
-  renderPool();
-});
+// Keep the winner in the pool
+function keepWinner() {
+    closeWinner();
+}
 
-genderSelect.addEventListener('change', renderPool);
-
-// Initial Render
-renderPool();
+// Close the winner container
+function closeWinner() {
+    winnerContainer.classList.add("hidden");
+}
