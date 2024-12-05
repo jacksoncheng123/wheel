@@ -11,14 +11,14 @@ fetch("participants.json")
     .then(response => response.json())
     .then(data => {
         participants = data;
-        renderPool(); // Call to render the pool after data is fetched
+        renderPool();
     })
     .catch(error => console.error("Error loading participants:", error));
 
 // Render the pool with fishes
 function renderPool() {
-    pool.innerHTML = '';  // Clear previous pool contents
-    fishes = [];  // Clear previous fishes array
+    pool.innerHTML = '';  // Clear the pool
+    fishes = [];  // Clear the fishes array
 
     const filteredParticipants = 
         genderSelect.value === "all"
@@ -41,7 +41,7 @@ function renderPool() {
         pool.appendChild(fish);
         fishes.push(fish);
 
-        // Add movement to fish
+        // Add fish movement
         setInterval(() => {
             fish.style.top = `${Math.random() * 90}%`;
             fish.style.left = `${Math.random() * 90}%`;
@@ -49,12 +49,12 @@ function renderPool() {
     });
 }
 
-// Add new participant to the pool
+// Add new participant
 addParticipantForm.addEventListener("submit", function(event) {
     event.preventDefault();
     const name = document.getElementById("participantName").value;
     const gender = document.getElementById("participantGender").value;
-    const classNumber = document.getElementById("participantClassNumber").value || "99";
+    const classNumber = participants.length + 1; // Auto-increment class number
 
     const newParticipant = {
         name: name,
@@ -63,11 +63,11 @@ addParticipantForm.addEventListener("submit", function(event) {
     };
 
     participants.push(newParticipant);
-    renderPool();  // Re-render the pool
-    addParticipantForm.reset();  // Reset the form
+    renderPool();
+    addParticipantForm.reset();
 });
 
-// Randomly draw a participant when pool is clicked
+// Random draw on pool click
 pool.addEventListener("click", () => {
     const filteredParticipants = 
         genderSelect.value === "all"
@@ -82,31 +82,30 @@ pool.addEventListener("click", () => {
 
     const winnerIndex = Math.floor(Math.random() * filteredParticipants.length);
     const winner = filteredParticipants[winnerIndex];
-
     displayWinner(winner);
 });
 
-// Display the winner and show the option to remove or keep
+// Display winner and options
 function displayWinner(winner) {
     winnerMessage.innerHTML = `Winner: ${winner.name}, Class Number: ${winner.classNumber}`;
     winnerContainer.classList.remove("hidden");
     winnerContainer.dataset.classNumber = winner.classNumber;
 }
 
-// Remove the winner from the pool
+// Remove winner
 function removeWinner() {
     const classNumber = winnerContainer.dataset.classNumber;
     participants = participants.filter(p => p.classNumber !== classNumber);
-    renderPool();  // Re-render the pool after removing a winner
+    renderPool();
     closeWinner();
 }
 
-// Keep the winner in the pool
+// Keep winner
 function keepWinner() {
     closeWinner();
 }
 
-// Close the winner container
+// Close winner container
 function closeWinner() {
     winnerContainer.classList.add("hidden");
 }
