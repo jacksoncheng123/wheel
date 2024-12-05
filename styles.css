@@ -1,112 +1,50 @@
-/* General Styles */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f8ff;
-  margin: 0;
-  padding: 0;
-  text-align: center;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
 }
 
 h1 {
-  margin-top: 20px;
-  color: #343a40;
+    margin-bottom: 20px;
 }
 
-.container {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.controls {
-  margin: 20px 0;
-}
-
-.controls label {
-  font-size: 16px;
-  margin-right: 10px;
-}
-
-.controls select,
-.controls button {
-  font-size: 16px;
-  padding: 5px 10px;
-  margin: 5px;
-}
-
-#add-container {
-  margin: 20px 0;
-}
-
-#add-container input,
-#add-container select,
-#add-container button {
-  font-size: 16px;
-  padding: 5px 10px;
-  margin: 5px;
-}
-
-/* Pool Container */
-#pool-container {
-  position: relative;
-  width: 400px;
-  height: 400px;
-  margin: 20px auto;
-  border-radius: 50%;
-  border: 5px solid #007bff;
-  background-color: #e0f7fa;
-  overflow: hidden;
+#gender {
+    margin-bottom: 20px;
 }
 
 #pool {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 400px;
+    background-color: #cce7ff;
+    border: 2px solid #333;
+    margin: 20px auto;
+    overflow: hidden;
+    border-radius: 10px;
 }
 
 .fish {
-  position: absolute;
-  width: 60px;
-  height: 60px;
-  background-size: cover;
-  background-position: center;
-  border-radius: 50%;
-  transition: transform 0.3s;
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    transition: all 0.5s ease;
 }
 
-/* Winner Container */
-#winner-container {
-  margin: 20px 0;
-  padding: 10px;
-  border: 1px solid #dee2e6;
-  background-color: #fff;
-  border-radius: 5px;
+#winnerContainer {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 2px solid #333;
+    display: inline-block;
+    text-align: center;
+    border-radius: 8px;
 }
 
-#winner-container img {
-  display: block;
-  margin: 10px auto;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-}
-
-#winner-container button {
-  margin: 10px 5px;
-  padding: 5px 10px;
-  font-size: 16px;
-}
-
-.btn {
-  cursor: pointer;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  transition: background-color 0.3s;
-}
-
-.btn:hover {
-  background-color: #0056b3;
+.hidden {
+    display: none;
 }
