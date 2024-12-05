@@ -1,15 +1,10 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    margin: 0;
     padding: 20px;
 }
 
 h1 {
-    margin-bottom: 20px;
-}
-
-#gender {
     margin-bottom: 20px;
 }
 
@@ -18,31 +13,32 @@ h1 {
     width: 100%;
     max-width: 600px;
     height: 400px;
-    background-color: lightgray;  /* Add background color for debugging */
+    background-color: blue; /* Blue pool background */
     border: 2px solid #333;
     margin: 20px auto;
     overflow: hidden;
     border-radius: 10px;
 }
 
+#addParticipantForm input, #addParticipantForm select, #addParticipantForm button {
+    margin: 10px;
+}
+
 .fish {
     position: absolute;
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     background-size: cover;
-    background-position: center;
+    border-radius: 50%;
     cursor: pointer;
-    transition: all 0.5s ease;
 }
 
 #winnerContainer {
     margin-top: 20px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border: 2px solid #333;
-    display: inline-block;
-    text-align: center;
-    border-radius: 8px;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 5px;
+    display: none;
 }
 
 .hidden {
