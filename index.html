@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Draw</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        select, button {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lucky Draw</h1>
+    <label for="gender">Choose gender:</label>
+    <select id="gender">
+        <option value="all">All</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+    </select>
+    <button onclick="draw()">Draw</button>
+    <div id="result"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
