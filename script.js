@@ -22,7 +22,7 @@ function createSegments(participantList) {
     const segment = document.createElement('div');
     segment.className = 'segment';
     segment.style.transform = `rotate(${index * sliceAngle}deg) skewY(${90 - sliceAngle}deg)`;
-    segment.style.backgroundImage = `url('/images/${participant.classNumber}.jpg')`;
+    segment.style.backgroundImage = `url('/images/${participant.classNumber}.jpeg')`;
 
     wheel.appendChild(segment);
   });
