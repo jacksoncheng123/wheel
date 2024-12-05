@@ -1,11 +1,10 @@
-const wheel = document.getElementById('wheel');
+const pool = document.getElementById('pool');
 const genderSelect = document.getElementById('gender');
 const resetBtn = document.getElementById('resetBtn');
 const addBtn = document.getElementById('addBtn');
 const nameInput = document.getElementById('nameInput');
 const genderInput = document.getElementById('genderInput');
 const winnerContainer = document.getElementById('winner-container');
-const drawnParticipants = document.getElementById('record');
 
 // Default participants
 let participants = [
@@ -15,41 +14,45 @@ let participants = [
   { name: 'Alice', gender: 'female', classNumber: 4 },
 ];
 
+let fishes = [];
 let drawn = [];
-let currentAngle = 0;
 
-// Function to render the wheel
-function renderWheel() {
-  wheel.innerHTML = '';
+// Function to render the pool
+function renderPool() {
+  pool.innerHTML = '';
   const filteredParticipants =
     genderSelect.value === 'all'
       ? participants
       : participants.filter(p => p.gender === genderSelect.value);
 
-  const segmentAngle = 360 / filteredParticipants.length;
+  filteredParticipants.forEach(participant => {
+    const fish = document.createElement('div');
+    fish.className = 'fish';
+    fish.style.backgroundImage = `url(images/${participant.classNumber}.jpg)`;
+    fish.style.top = `${Math.random() * 90}%`;
+    fish.style.left = `${Math.random() * 90}%`;
+    fish.dataset.name = participant.name;
+    fish.dataset.classNumber = participant.classNumber;
+    fish.dataset.gender = participant.gender;
+    pool.appendChild(fish);
+    fishes.push(fish);
 
-  filteredParticipants.forEach((participant, index) => {
-    const segment = document.createElement('div');
-    segment.className = 'segment';
-    segment.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
-    segment.style.transform = `rotate(${index * segmentAngle}deg) skewY(-${90 - segmentAngle}deg)`;
-    wheel.appendChild(segment);
+    // Add movement to fish
+    setInterval(() => {
+      fish.style.top = `${Math.random() * 90}%`;
+      fish.style.left = `${Math.random() * 90}%`;
+    }, 2000);
   });
 }
 
-// Function to spin the wheel
-function spinWheel() {
-  const randomSpin = Math.floor(Math.random() * 360) + 720;
-  currentAngle += randomSpin;
-  wheel.style.transform = `rotate(${currentAngle}deg)`;
+// Function to catch a random fish
+function catchFish() {
+  const randomIndex = Math.floor(Math.random() * fishes.length);
+  const fish = fishes[randomIndex];
+  const name = fish.dataset.name;
+  const classNumber = fish.dataset.classNumber;
 
-  setTimeout(() => {
-    const winnerIndex =
-      Math.floor(((360 - (currentAngle % 360)) / (360 / participants.length)) %
-        participants.length);
-    const winner = participants[winnerIndex];
-    displayWinner(winner);
-  }, 5000); // Matches the animation duration
+  displayWinner({ name, classNumber });
 }
 
 // Function to display the winner
@@ -57,16 +60,16 @@ function displayWinner(winner) {
   winnerContainer.innerHTML = `
     <p>Winner: ${winner.name}</p>
     <img src="images/${winner.classNumber}.jpg" alt="${winner.name}">
-    <button onclick="removeWinner(${participants.indexOf(winner)})">Remove</button>
+    <button onclick="removeWinner(${winner.classNumber})">Remove</button>
     <button onclick="closeWinner()">Keep</button>
   `;
 }
 
-// Function to remove a winner
-function removeWinner(index) {
-  participants.splice(index, 1);
+// Function to remove the winner
+function removeWinner(classNumber) {
+  participants = participants.filter(p => p.classNumber != classNumber);
   closeWinner();
-  renderWheel();
+  renderPool();
 }
 
 // Function to close winner modal
@@ -78,24 +81,24 @@ function closeWinner() {
 addBtn.addEventListener('click', () => {
   const name = nameInput.value;
   const gender = genderInput.value;
-  const classNumber = participants.length + 1; // Assign unique classNumber
+  const classNumber = participants.length + 1;
 
   if (name) {
     participants.push({ name, gender, classNumber });
     nameInput.value = '';
-    renderWheel();
+    renderPool();
   }
 });
 
 // Event Listeners
-wheel.addEventListener('click', spinWheel);
+pool.addEventListener('click', catchFish);
 resetBtn.addEventListener('click', () => {
   participants = [...drawn, ...participants];
   drawn = [];
-  renderWheel();
+  renderPool();
 });
 
-genderSelect.addEventListener('change', renderWheel);
+genderSelect.addEventListener('change', renderPool);
 
 // Initial Render
-renderWheel();
+renderPool();
