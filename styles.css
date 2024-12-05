@@ -1,0 +1,106 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Control Section */
+.controls, .add-participant {
+    margin: 20px 0;
+}
+
+select, button, input {
+    margin: 5px;
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Wheel Styling */
+#wheel-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    margin: 30px auto;
+}
+
+#wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    transform: rotate(0deg);
+    border: 5px solid #333;
+    background: conic-gradient(
+        red 0% 25%, 
+        blue 25% 50%, 
+        yellow 50% 75%, 
+        green 75% 100%
+    );
+}
+
+.segment {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    clip-path: circle(50%);
+    transform-origin: center;
+}
+
+.segment div {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    background: inherit;
+    top: 50%;
+    left: 50%;
+    transform-origin: bottom right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+}
+
+/* Pointer Styling */
+#pointer {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 50px solid #333;
+    transform: translateX(-50%);
+}
+
+/* Result and Record */
+#result {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#record {
+    margin-top: 30px;
+    text-align: left;
+    margin-left: 10%;
+    margin-right: 10%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #fff;
+    font-size: 16px;
+    border-radius: 8px;
+}
