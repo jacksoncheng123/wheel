@@ -7,10 +7,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <h1>Fishing Lucky Draw</h1>
 
-    <!-- Gender filter dropdown -->
+    <!-- Gender Filter -->
     <label for="gender">Choose gender:</label>
     <select id="gender">
         <option value="all">All</option>
@@ -26,14 +25,13 @@
             <option value="male">Male</option>
             <option value="female">Female</option>
         </select>
-        <input type="number" id="participantClassNumber" placeholder="Enter class number (optional)" value="99">
         <button type="submit">Add Participant</button>
     </form>
 
-    <!-- Pool (Blue background) -->
+    <!-- Pool -->
     <div id="pool" class="pool"></div>
 
-    <!-- Winner List -->
+    <!-- Winner Display -->
     <div id="winnerContainer" class="hidden">
         <h2 id="winnerMessage"></h2>
         <button onclick="removeWinner()">Remove from pool</button>
