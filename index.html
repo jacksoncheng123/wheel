@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky Draw</title>
+    <title>Lucky Draw Wheel</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,17 +19,43 @@
         select, button {
             margin: 10px;
         }
+        #wheel {
+            margin-top: 20px;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 5px solid #333;
+            position: relative;
+            overflow: hidden;
+        }
+        #pointer {
+            width: 0; 
+            height: 0; 
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 50px solid #333;
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #spinBtn {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1>Lucky Draw</h1>
+    <h1>Lucky Draw Wheel</h1>
     <label for="gender">Choose gender:</label>
     <select id="gender">
         <option value="all">All</option>
         <option value="male">Male</option>
         <option value="female">Female</option>
     </select>
-    <button onclick="draw()">Draw</button>
+    <button id="spinBtn" onclick="spin()">Spin</button>
+    <div id="wheel">
+        <div id="pointer"></div>
+    </div>
     <div id="result"></div>
 
     <script src="script.js"></script>
