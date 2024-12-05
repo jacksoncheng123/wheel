@@ -1,131 +1,101 @@
-let participants = [];
-let drawnParticipants = [];
+const wheel = document.getElementById('wheel');
+const genderSelect = document.getElementById('gender');
+const resetBtn = document.getElementById('resetBtn');
+const addBtn = document.getElementById('addBtn');
+const nameInput = document.getElementById('nameInput');
+const genderInput = document.getElementById('genderInput');
+const winnerContainer = document.getElementById('winner-container');
+const drawnParticipants = document.getElementById('record');
 
-// Fetch participants data from JSON
-fetch('participants.json')
-  .then((response) => response.json())
-  .then((data) => {
-    participants = data;
-    createSegments(participants);
-  })
-  .catch((error) => console.error('Error loading participants:', error));
+// Default participants
+let participants = [
+  { name: 'John', gender: 'male', classNumber: 1 },
+  { name: 'Jane', gender: 'female', classNumber: 2 },
+  { name: 'Smith', gender: 'male', classNumber: 3 },
+  { name: 'Alice', gender: 'female', classNumber: 4 },
+];
 
-// Create wheel segments with images
-function createSegments(participantList) {
-  const wheel = document.getElementById('wheel');
-  wheel.innerHTML = ''; // Clear previous segments
-  const totalSegments = participantList.length;
+let drawn = [];
+let currentAngle = 0;
 
-  participantList.forEach((participant, index) => {
-    const sliceAngle = 360 / totalSegments;
+// Function to render the wheel
+function renderWheel() {
+  wheel.innerHTML = '';
+  const filteredParticipants =
+    genderSelect.value === 'all'
+      ? participants
+      : participants.filter(p => p.gender === genderSelect.value);
 
+  const segmentAngle = 360 / filteredParticipants.length;
+
+  filteredParticipants.forEach((participant, index) => {
     const segment = document.createElement('div');
     segment.className = 'segment';
-    segment.style.transform = `rotate(${index * sliceAngle}deg) skewY(${90 - sliceAngle}deg)`;
-    segment.style.backgroundImage = `url('/images/${participant.classNumber}.jpeg')`;
-
+    segment.style.backgroundImage = `url(images/${participant.classNumber}.jpg)`;
+    segment.style.transform = `rotate(${index * segmentAngle}deg) skewY(-${90 - segmentAngle}deg)`;
     wheel.appendChild(segment);
   });
 }
 
-// Spin the wheel when tapped
-function spin() {
-  const gender = document.getElementById('gender').value;
+// Function to spin the wheel
+function spinWheel() {
+  const randomSpin = Math.floor(Math.random() * 360) + 720;
+  currentAngle += randomSpin;
+  wheel.style.transform = `rotate(${currentAngle}deg)`;
 
-  const filteredParticipants = gender === 'all'
-    ? participants
-    : participants.filter((p) => p.gender === gender);
-
-  if (filteredParticipants.length === 0) {
-    alert('No participants found for the selected gender.');
-    return;
-  }
-
-  createSegments(filteredParticipants);
-
-  const winnerIndex = Math.floor(Math.random() * filteredParticipants.length);
-  const winner = filteredParticipants[winnerIndex];
-  const wheel = document.getElementById('wheel');
-
-  // Spin animation
-  wheel.style.transition = 'none';
-  wheel.style.transform = 'rotate(0deg)';
   setTimeout(() => {
-    wheel.style.transition = 'transform 5s ease-out';
-    const rotation = 360 * 5 + (360 / filteredParticipants.length) * winnerIndex;
-    wheel.style.transform = `rotate(${rotation}deg)`;
-
-    setTimeout(() => {
-      displayWinner(winner, winnerIndex, filteredParticipants);
-    }, 5000);
-  }, 100);
+    const winnerIndex =
+      Math.floor(((360 - (currentAngle % 360)) / (360 / participants.length)) %
+        participants.length);
+    const winner = participants[winnerIndex];
+    displayWinner(winner);
+  }, 5000); // Matches the animation duration
 }
 
-// Display winner and ask whether to remove them
-function displayWinner(winner, winnerIndex, filteredParticipants) {
-  const winnerContainer = document.getElementById('winner-container');
+// Function to display the winner
+function displayWinner(winner) {
   winnerContainer.innerHTML = `
-    <p>Winner: <strong>${winner.name}</strong></p>
-    <p><img src="/images/${winner.classNumber}.jpg" alt="${winner.name}" style="width:100px; height:100px; border-radius:50%;"></p>
-    <button id="remove-btn" class="btn btn-danger">Remove from Pool</button>
-    <button id="keep-btn" class="btn btn-secondary">Keep in Pool</button>
+    <p>Winner: ${winner.name}</p>
+    <img src="images/${winner.classNumber}.jpg" alt="${winner.name}">
+    <button onclick="removeWinner(${participants.indexOf(winner)})">Remove</button>
+    <button onclick="closeWinner()">Keep</button>
   `;
-
-  document.getElementById('remove-btn').addEventListener('click', () => {
-    participants = participants.filter((p) => p.name !== winner.name);
-    drawnParticipants.push(winner.name);
-    updateDrawnRecord();
-    winnerContainer.innerHTML = '<p>Winner decision recorded!</p>';
-    createSegments(participants);
-  });
-
-  document.getElementById('keep-btn').addEventListener('click', () => {
-    drawnParticipants.push(winner.name);
-    updateDrawnRecord();
-    winnerContainer.innerHTML = '<p>Winner decision recorded!</p>';
-  });
 }
 
-// Update the drawn participants record
-function updateDrawnRecord() {
-  const record = document.getElementById('record');
-  record.innerHTML = 'Drawn Participants:<br>';
-  drawnParticipants.forEach((name, i) => {
-    record.innerHTML += `${i + 1}. ${name}<br>`;
-  });
+// Function to remove a winner
+function removeWinner(index) {
+  participants.splice(index, 1);
+  closeWinner();
+  renderWheel();
 }
 
-// Add a new participant
-function addParticipant() {
-  const name = document.getElementById('nameInput').value;
-  const gender = document.getElementById('genderInput').value;
+// Function to close winner modal
+function closeWinner() {
+  winnerContainer.innerHTML = '<p>No winner yet!</p>';
+}
 
-  if (!name) {
-    alert('Please enter a name.');
-    return;
+// Add participant
+addBtn.addEventListener('click', () => {
+  const name = nameInput.value;
+  const gender = genderInput.value;
+  const classNumber = participants.length + 1; // Assign unique classNumber
+
+  if (name) {
+    participants.push({ name, gender, classNumber });
+    nameInput.value = '';
+    renderWheel();
   }
-
-  participants.push({ name, gender, classNumber: 99 });
-  createSegments(participants);
-  document.getElementById('nameInput').value = '';
-}
-
-// Reset the wheel and participants
-function resetWheel() {
-  fetch('participants.json')
-    .then((response) => response.json())
-    .then((data) => {
-      participants = data;
-      drawnParticipants = [];
-      updateDrawnRecord();
-      createSegments(participants);
-      document.getElementById('winner-container').innerHTML = '<p>No winner yet!</p>';
-    })
-    .catch((error) => console.error('Error resetting participants:', error));
-}
+});
 
 // Event Listeners
-document.getElementById('wheel').addEventListener('click', spin);
-document.getElementById('wheel').addEventListener('touchstart', spin); // For touch devices
-document.getElementById('resetBtn').addEventListener('click', resetWheel);
-document.getElementById('addBtn').addEventListener('click', addParticipant);
+wheel.addEventListener('click', spinWheel);
+resetBtn.addEventListener('click', () => {
+  participants = [...drawn, ...participants];
+  drawn = [];
+  renderWheel();
+});
+
+genderSelect.addEventListener('change', renderWheel);
+
+// Initial Render
+renderWheel();
