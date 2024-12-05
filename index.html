@@ -3,25 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky Draw Fishing Pool</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Fishing Lucky Draw</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Lucky Draw: Fishing Pool</h1>
+
+    <h1>Fishing Lucky Draw</h1>
+
+    <!-- Gender filter dropdown -->
     <label for="gender">Choose gender:</label>
     <select id="gender">
         <option value="all">All</option>
         <option value="male">Male</option>
         <option value="female">Female</option>
     </select>
-    <button onclick="renderPool()">Refresh Pool</button>
 
-    <div id="pool"></div>
+    <!-- Add New Participant Form -->
+    <h2>Add New Participant</h2>
+    <form id="addParticipantForm">
+        <input type="text" id="participantName" placeholder="Enter name" required>
+        <select id="participantGender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+        <input type="number" id="participantClassNumber" placeholder="Enter class number (optional)" value="99">
+        <button type="submit">Add Participant</button>
+    </form>
 
+    <!-- Pool (Blue background) -->
+    <div id="pool" class="pool"></div>
+
+    <!-- Winner List -->
     <div id="winnerContainer" class="hidden">
-        <p id="winnerMessage"></p>
-        <button id="removeButton" onclick="removeWinner()">Remove</button>
-        <button id="keepButton" onclick="keepWinner()">Keep</button>
+        <h2 id="winnerMessage"></h2>
+        <button onclick="removeWinner()">Remove from pool</button>
+        <button onclick="keepWinner()">Keep in pool</button>
     </div>
 
     <script src="script.js"></script>
