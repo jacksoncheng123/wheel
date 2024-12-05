@@ -9,17 +9,18 @@ const winnerMessage = document.getElementById("winnerMessage");
 fetch("participants.json")
     .then(response => response.json())
     .then(data => {
+        console.log("Participants loaded:", data);  // Debugging: Check participants data
         participants = data;
-        renderPool();
+        renderPool();  // Call to render the pool after data is fetched
     })
     .catch(error => console.error("Error loading participants:", error));
 
 // Render the pool with fishes
 function renderPool() {
-    pool.innerHTML = '';
-    fishes = [];
+    pool.innerHTML = '';  // Clear previous pool contents
+    fishes = [];  // Clear previous fishes array
 
-    const filteredParticipants =
+    const filteredParticipants = 
         genderSelect.value === "all"
             ? participants
             : participants.filter(p => p.gender === genderSelect.value);
@@ -28,6 +29,8 @@ function renderPool() {
         pool.innerHTML = '<p>No participants in the pool!</p>';
         return;
     }
+
+    console.log("Filtered Participants:", filteredParticipants);  // Debugging: Log filtered participants
 
     filteredParticipants.forEach(participant => {
         const fish = document.createElement("div");
@@ -46,6 +49,7 @@ function renderPool() {
             fish.style.left = `${Math.random() * 90}%`;
         }, 2000);
 
+        // Event listener for catching a fish
         fish.addEventListener("click", () => catchFish(participant));
     });
 }
@@ -59,8 +63,6 @@ function catchFish(participant) {
 function displayWinner(participant) {
     winnerMessage.innerHTML = `Winner: ${participant.name}`;
     winnerContainer.classList.remove("hidden");
-
-    // Attach participant details for removing later
     winnerContainer.dataset.classNumber = participant.classNumber;
 }
 
@@ -68,7 +70,7 @@ function displayWinner(participant) {
 function removeWinner() {
     const classNumber = winnerContainer.dataset.classNumber;
     participants = participants.filter(p => p.classNumber !== classNumber);
-    renderPool();
+    renderPool();  // Re-render the pool after removing a winner
     closeWinner();
 }
 
