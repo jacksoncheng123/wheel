@@ -35,7 +35,7 @@ function createSegments(participantList) {
     });
 }
 
-// Spin the wheel when clicked
+// Spin the wheel when clicked or tapped
 function spin() {
     const gender = document.getElementById('gender').value;
 
@@ -130,7 +130,10 @@ function resetWheel() {
         .catch(error => console.error('Error resetting participants:', error));
 }
 
-// Add event listeners for tap-to-spin
-document.getElementById('wheel').addEventListener('click', spin);
+// Add event listeners for both tap and click to spin
+const wheel = document.getElementById('wheel');
+wheel.addEventListener('click', spin); // For desktop users
+wheel.addEventListener('touchstart', spin); // For touchscreens
+
 document.getElementById('resetBtn').addEventListener('click', resetWheel);
 document.getElementById('addBtn').addEventListener('click', addParticipant);
