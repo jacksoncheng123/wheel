@@ -3,64 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lucky Draw Pool</title>
+    <title>Lucky Draw</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Lucky Draw Pool</h1>
-        <div>
-            <label for="genderFilter">Draw Gender:</label>
-            <select id="genderFilter">
-                <option value="all">All</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-            </select>
-        </div>
-        <button id="addParticipantButton">Add Participant</button>
-        <button id="viewPoolButton">View Pool</button>
-        <button id="drawButton">Draw</button>
-    </header>
-    <main>
-        <div id="pool" class="pool"></div>
-    </main>
+    <h1>Lucky Draw</h1>
+    <label for="genderFilter">Choose gender:</label>
+    <select id="genderFilter">
+        <option value="all">All</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+    </select>
+    <button id="drawButton">Draw</button>
 
-    <!-- Winner Modal -->
-    <div id="winnerContainer" class="modal hidden">
-        <div class="modal-content">
-            <div id="winnerImage" class="winner-image"></div>
-            <p id="winnerMessage"></p>
-            <button onclick="keepWinner()">Keep in Pool</button>
-            <button onclick="removeWinner()">Remove from Pool</button>
-        </div>
-    </div>
+    <div id="pool" class="pool"></div>
 
-    <!-- Add Participant Modal -->
-    <div id="addParticipantModal" class="modal hidden">
-        <div class="modal-content">
-            <h2>Add Participant</h2>
-            <form id="addParticipantForm">
-                <label for="participantName">Name:</label>
-                <input type="text" id="participantName" required>
-                <label for="participantGender">Gender:</label>
-                <select id="participantGender">
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
-                <button type="submit">Add</button>
-                <button type="button" id="closeModal">Cancel</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Participants Pool Modal -->
-    <div id="participantsModal" class="modal hidden">
-        <div class="modal-content">
-            <h2>Participants Pool</h2>
-            <ul id="participantsList"></ul>
-            <button id="removeSelectedButton">Remove Selected</button>
-            <button id="closeParticipantsModal">Close</button>
-        </div>
+    <div id="winnerPopup" class="popup hidden">
+        <h2>Winner!</h2>
+        <div id="winnerImage" class="winner-image"></div>
+        <p id="winnerDetails"></p>
+        <button id="removeWinnerButton">Remove from pool</button>
+        <button id="closePopupButton">Close</button>
     </div>
 
     <script src="script.js"></script>
