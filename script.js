@@ -87,7 +87,7 @@ drawButton.addEventListener("click", () => {
 // Display the winner
 function displayWinner(winner) {
     winnerMessage.innerHTML = `Winner: ${winner.name}`;
-    winnerImage.src = `images/${winner.classNumber}.jpeg`;
+    winnerImage.style.backgroundImage = `url(images/${winner.classNumber}.jpeg)`;
     winnerContainer.classList.remove("hidden");
 
     window.removeWinner = () => {
