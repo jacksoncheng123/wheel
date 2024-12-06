@@ -40,20 +40,10 @@ h1 {
 
 @keyframes moveAround {
     0% { transform: translate(0, 0); }
-    25% { transform: translate(100px, -50px); }
-    50% { transform: translate(-100px, 50px); }
-    75% { transform: translate(50px, -100px); }
-    100% { transform: translate(0, 0); }
-}
-
-.drawing {
-    box-shadow: 0 0 15px 5px #ffeb3b;
-    animation: glow 0.5s infinite;
-}
-
-@keyframes glow {
-    0% { box-shadow: 0 0 15px 5px #ffeb3b; }
-    100% { box-shadow: 0 0 25px 10px #ffeb3b; }
+    25% { transform(50px, -30px); }
+    50% { transform(-50px, 30px); }
+    75% { transform(30px, -50px); }
+    100% { transform(0, 0); }
 }
 
 /* Popups and Buttons */
