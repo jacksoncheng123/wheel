@@ -1,3 +1,4 @@
+/* General Styling */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -9,19 +10,24 @@ h1 {
     margin-bottom: 20px;
 }
 
-select, button {
+select, button, input {
     margin: 10px;
     padding: 5px 10px;
 }
 
+button {
+    cursor: pointer;
+}
+
+/* Pool Styling */
 .pool {
-    width: 300px;
-    height: 300px;
+    width: 400px;
+    height: 200px;
     background-color: #87CEEB; /* Water pool color */
-    border-radius: 50%;
-    position: relative;
+    border-radius: 25px; /* Rounded rectangle */
     margin: 20px auto;
     overflow: hidden;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -34,10 +40,11 @@ select, button {
     background-position: center;
     position: absolute;
     transition: top 3s ease, left 3s ease;
-    border-radius: 50%;
-    border: 1px solid white;
+    border-radius: 50%; /* Circle images */
+    border: 2px solid white;
 }
 
+/* Popup Styling */
 .popup {
     position: fixed;
     top: 50%;
@@ -61,6 +68,31 @@ select, button {
     background-size: cover;
     background-position: center;
     margin: 10px auto;
-    border-radius: 50%;
+    border-radius: 50%; /* Circle winner image */
     border: 2px solid black;
+}
+
+/* Participants Management */
+.management {
+    margin: 20px auto;
+    text-align: center;
+}
+
+.management input, .management select, .management button {
+    display: block;
+    margin: 10px auto;
+}
+
+#participantList {
+    margin-top: 10px;
+    text-align: left;
+    max-width: 400px;
+    margin: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+#participantList input {
+    margin-right: 10px;
 }
