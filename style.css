@@ -96,3 +96,17 @@ button {
 #participantList input {
     margin-right: 10px;
 }
+/* Winner List Popup */
+#winnerList {
+    text-align: left;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 10px auto;
+}
+
+#winnerList li {
+    margin-bottom: 5px;
+}
