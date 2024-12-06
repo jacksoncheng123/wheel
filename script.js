@@ -6,6 +6,7 @@ fetch("participants.json")
     .then(data => {
         participants = data;
         renderPool();
+        renderParticipantList();
     })
     .catch(error => console.error("Error loading participants:", error));
 
@@ -17,13 +18,18 @@ const winnerImage = document.getElementById("winnerImage");
 const winnerDetails = document.getElementById("winnerDetails");
 const removeWinnerButton = document.getElementById("removeWinnerButton");
 const closePopupButton = document.getElementById("closePopupButton");
+const newName = document.getElementById("newName");
+const newGender = document.getElementById("newGender");
+const addParticipantButton = document.getElementById("addParticipantButton");
+const participantList = document.getElementById("participantList");
+const removeSelectedButton = document.getElementById("removeSelectedButton");
 
 let fishes = [];
 
 // Render the pool based on gender filter
 function renderPool() {
-    const selectedGender = genderFilter.value; // Get selected gender
-    const filteredParticipants = participants.filter(p => 
+    const selectedGender = genderFilter.value;
+    const filteredParticipants = participants.filter(p =>
         selectedGender === "all" || p.gender === selectedGender
     );
 
@@ -41,6 +47,16 @@ function renderPool() {
     });
 }
 
+// Render participant list in the management section
+function renderParticipantList() {
+    participantList.innerHTML = participants.map(p => `
+        <label>
+            <input type="checkbox" value="${p.classNumber}">
+            ${p.name} (${p.gender})
+        </label><br>
+    `).join("");
+}
+
 // Draw a random participant
 function drawParticipant() {
     if (fishes.length === 0) {
@@ -51,26 +67,58 @@ function drawParticipant() {
     const winnerIndex = Math.floor(Math.random() * fishes.length);
     const winner = fishes[winnerIndex];
 
-    // Show the winner popup
+    // Show winner in popup
     winnerImage.style.backgroundImage = `url(images/${winner.classNumber}.jpeg)`;
     winnerDetails.textContent = `Name: ${winner.name}`;
     winnerPopup.classList.remove("hidden");
 
-    // Remove the winner from the pool if the button is clicked
+    // Remove winner from pool
     removeWinnerButton.onclick = () => {
         participants = participants.filter(p => p !== winner);
         renderPool();
+        renderParticipantList();
         winnerPopup.classList.add("hidden");
     };
 
-    // Close the popup
+    // Close popup
     closePopupButton.onclick = () => {
         winnerPopup.classList.add("hidden");
     };
 }
 
-// Update pool when gender changes
-genderFilter.addEventListener("change", renderPool);
+// Add a new participant
+function addParticipant() {
+    const name = newName.value.trim();
+    const gender = newGender.value;
 
-// Draw participant when the draw button is clicked
+    if (!name) {
+        alert("Please enter a name!");
+        return;
+    }
+
+    participants.push({
+        name,
+        gender,
+        classNumber: Math.max(...participants.map(p => p.classNumber), 0) + 1
+    });
+
+    newName.value = "";
+    renderPool();
+    renderParticipantList();
+}
+
+// Remove selected participants
+function removeSelectedParticipants() {
+    const selected = Array.from(participantList.querySelectorAll("input:checked"))
+        .map(input => parseInt(input.value, 10));
+
+    participants = participants.filter(p => !selected.includes(p.classNumber));
+    renderPool();
+    renderParticipantList();
+}
+
+// Event Listeners
+genderFilter.addEventListener("change", renderPool);
 drawButton.addEventListener("click", drawParticipant);
+addParticipantButton.addEventListener("click", addParticipant);
+removeSelectedButton.addEventListener("click", removeSelectedParticipants);
