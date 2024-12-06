@@ -3,60 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fishing Lucky Draw</title>
+    <title>Lucky Draw Pool</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Fishing Lucky Draw</h1>
-
-    <!-- Gender Filter -->
-    <label for="gender">Choose gender:</label>
-    <select id="gender">
-        <option value="all">All</option>
-        <option value="male">Male</option>
-        <option value="female">Female</option>
-    </select>
-
-    <!-- Add Participant and View Pool -->
-    <div class="actions">
+    <header>
+        <h1>Lucky Draw Pool</h1>
         <button id="addParticipantButton">Add Participant</button>
         <button id="viewPoolButton">View Pool</button>
         <button id="drawButton">Draw</button>
+    </header>
+    <main>
+        <div id="pool" class="pool"></div>
+    </main>
+
+    <!-- Winner Modal -->
+    <div id="winnerContainer" class="modal hidden">
+        <div class="modal-content">
+            <p id="winnerMessage"></p>
+            <button onclick="keepWinner()">Keep in Pool</button>
+            <button onclick="removeWinner()">Remove from Pool</button>
+        </div>
     </div>
 
-    <!-- Modal for Adding Participants -->
+    <!-- Add Participant Modal -->
     <div id="addParticipantModal" class="modal hidden">
         <div class="modal-content">
-            <span id="closeModal" class="close">&times;</span>
-            <h2>Add New Participant</h2>
+            <h2>Add Participant</h2>
             <form id="addParticipantForm">
-                <input type="text" id="participantName" placeholder="Enter name" required>
+                <label for="participantName">Name:</label>
+                <input type="text" id="participantName" required>
+                <label for="participantGender">Gender:</label>
                 <select id="participantGender">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                 </select>
-                <button type="submit">Add Participant</button>
+                <button type="submit">Add</button>
+                <button type="button" id="closeModal">Cancel</button>
             </form>
         </div>
-    </div>
-
-    <!-- Pool -->
-    <div id="pool" class="pool"></div>
-
-    <!-- Winner Display -->
-    <div id="winnerContainer" class="hidden">
-        <h2 id="winnerMessage"></h2>
-        <button onclick="removeWinner()">Remove from pool</button>
-        <button onclick="keepWinner()">Keep in pool</button>
     </div>
 
     <!-- Participants Pool Modal -->
     <div id="participantsModal" class="modal hidden">
         <div class="modal-content">
-            <span id="closeParticipantsModal" class="close">&times;</span>
             <h2>Participants Pool</h2>
             <ul id="participantsList"></ul>
             <button id="removeSelectedButton">Remove Selected</button>
+            <button id="closeParticipantsModal">Close</button>
         </div>
     </div>
 
