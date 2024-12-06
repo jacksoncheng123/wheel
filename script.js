@@ -5,6 +5,7 @@ let fishes = [];
 const pool = document.getElementById("pool");
 const winnerContainer = document.getElementById("winnerContainer");
 const winnerMessage = document.getElementById("winnerMessage");
+const winnerImage = document.getElementById("winnerImage");
 const genderFilter = document.getElementById("genderFilter");
 const addParticipantModal = document.getElementById("addParticipantModal");
 const participantsModal = document.getElementById("participantsModal");
@@ -43,6 +44,63 @@ function renderPool() {
     });
 }
 
+// Draw a random participant with animation
+drawButton.addEventListener("click", () => {
+    const selectedGender = genderFilter.value;
+    let filteredParticipants = participants;
+
+    if (selectedGender !== "all") {
+        filteredParticipants = participants.filter(p => p.gender === selectedGender);
+    }
+
+    if (filteredParticipants.length === 0) {
+        alert("No participants matching the criteria!");
+        return;
+    }
+
+    // Simulate selection animation
+    let counter = 0;
+    const maxSpins = 20;
+    const interval = setInterval(() => {
+        const index = counter % fishes.length;
+        fishes.forEach(fish => fish.classList.remove("highlight"));
+        fishes[index].classList.add("highlight");
+
+        counter++;
+        if (counter >= maxSpins) {
+            clearInterval(interval);
+
+            // Select the winner
+            const winnerIndex = Math.floor(Math.random() * filteredParticipants.length);
+            const winner = filteredParticipants[winnerIndex];
+
+            // Display winner
+            displayWinner(winner);
+
+            // Highlight winner fish
+            const winnerFish = fishes[winnerIndex];
+            if (winnerFish) winnerFish.classList.add("highlight");
+        }
+    }, 100);
+});
+
+// Display the winner
+function displayWinner(winner) {
+    winnerMessage.innerHTML = `Winner: ${winner.name}`;
+    winnerImage.src = `images/${winner.classNumber}.jpeg`;
+    winnerContainer.classList.remove("hidden");
+
+    window.removeWinner = () => {
+        participants = participants.filter(p => p !== winner);
+        winnerContainer.classList.add("hidden");
+        renderPool();
+    };
+
+    window.keepWinner = () => {
+        winnerContainer.classList.add("hidden");
+    };
+}
+
 // Add a participant
 document.getElementById("addParticipantForm").addEventListener("submit", event => {
     event.preventDefault();
@@ -61,41 +119,6 @@ document.getElementById("addParticipantForm").addEventListener("submit", event =
         event.target.reset();
     }
 });
-
-// Draw a random participant
-drawButton.addEventListener("click", () => {
-    const selectedGender = genderFilter.value;
-    let filteredParticipants = participants;
-
-    if (selectedGender !== "all") {
-        filteredParticipants = participants.filter(p => p.gender === selectedGender);
-    }
-
-    if (filteredParticipants.length === 0) {
-        alert("No participants matching the criteria!");
-        return;
-    }
-
-    const winnerIndex = Math.floor(Math.random() * filteredParticipants.length);
-    const winner = filteredParticipants[winnerIndex];
-    displayWinner(winner);
-});
-
-// Display the winner
-function displayWinner(winner) {
-    winnerMessage.innerHTML = `Winner: ${winner.name}`;
-    winnerContainer.classList.remove("hidden");
-
-    window.removeWinner = () => {
-        participants = participants.filter(p => p !== winner);
-        winnerContainer.classList.add("hidden");
-        renderPool();
-    };
-
-    window.keepWinner = () => {
-        winnerContainer.classList.add("hidden");
-    };
-}
 
 // Modal interactions
 addParticipantButton.addEventListener("click", () => {
