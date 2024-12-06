@@ -18,17 +18,16 @@ body {
     background-color: #d4f1f9;
     padding: 20px;
     border-radius: 20px;
-    max-width: 80%;
-    margin: 20px auto;
-    min-height: 300px;
+    width: 90%;
+    height: 500px;
     position: relative;
     overflow: hidden;
 }
 
 /* Moving Images in Circular Animation */
 .fish {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     background-size: cover;
     background-position: center;
     border-radius: 50%;
@@ -37,8 +36,8 @@ body {
 }
 
 @keyframes swim {
-    0% { transform: rotate(0deg) translate(150px) rotate(0deg); }
-    100% { transform: rotate(360deg) translate(150px) rotate(-360deg); }
+    0% { transform: rotate(0deg) translate(200px) rotate(0deg); }
+    100% { transform: rotate(360deg) translate(200px) rotate(-360deg); }
 }
 
 /* Draw Animation */
