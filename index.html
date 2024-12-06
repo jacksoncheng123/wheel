@@ -22,6 +22,7 @@
     <button id="drawButton">Draw</button>
     <button id="viewPoolButton">View Pool</button>
     <button id="viewWinnersButton">View Winner List</button>
+    <button id="addParticipantButton">Add New Participant</button>
 
     <!-- Winner Popup -->
     <div id="winnerPopup" class="popup hidden">
@@ -30,6 +31,20 @@
         <p id="winnerDetails"></p>
         <button id="removeWinnerButton">Remove from pool</button>
         <button id="closePopupButton">Close</button>
+    </div>
+
+    <!-- Add Participant -->
+    <div id="addParticipantPopup" class="popup hidden">
+        <h2>Add Participant</h2>
+        <label for="newParticipantName">Name:</label>
+        <input type="text" id="newParticipantName" placeholder="Enter name">
+        <label for="newParticipantGender">Gender:</label>
+        <select id="newParticipantGender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+        <button id="addParticipantConfirmButton">Add</button>
+        <button id="closeAddParticipantButton">Close</button>
     </div>
 
     <!-- Participants Management -->
