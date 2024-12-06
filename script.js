@@ -1,7 +1,7 @@
 let participants = [];
-let winners = []; // To store the winner list
+let winners = [];
 
-// Fetch participants from JSON
+// Fetch participants
 fetch("participants.json")
     .then(response => response.json())
     .then(data => {
@@ -30,7 +30,6 @@ const closeWinnerListButton = document.getElementById("closeWinnerListButton");
 
 let fishes = [];
 
-// Render the pool based on gender filter
 function renderPool() {
     const selectedGender = genderFilter.value;
     const filteredParticipants = participants.filter(
@@ -44,60 +43,57 @@ function renderPool() {
         const fish = document.createElement("div");
         fish.className = "fish";
         fish.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
-        fish.style.top = `${Math.random() * 80}%`;
-        fish.style.left = `${Math.random() * 80}%`;
         pool.appendChild(fish);
         fishes.push(participant);
     });
 }
 
-// Render participant list in the management section
-function renderParticipantList() {
-    participantList.innerHTML = participants
-        .map(
-            p => `
-        <label>
-            <input type="checkbox" value="${p.classNumber}">
-            ${p.name} (${p.gender})
-        </label><br>
-    `
-        )
-        .join("");
-}
-
-// Draw a random participant
 function drawParticipant() {
     if (fishes.length === 0) {
-        alert("No participants available for this gender!");
+        alert("No participants available!");
         return;
     }
 
     const winnerIndex = Math.floor(Math.random() * fishes.length);
     const winner = fishes[winnerIndex];
 
-    // Show winner in popup
-    winnerImage.style.backgroundImage = `url(images/${winner.classNumber}.jpeg)`;
-    winnerDetails.textContent = `Name: ${winner.name}`;
-    winnerPopup.classList.remove("hidden");
+    // Highlight winner with animation
+    const winnerElement = pool.children[winnerIndex];
+    winnerElement.classList.add("drawing");
 
-    // Add to winners list
-    winners.push(winner.name);
+    setTimeout(() => {
+        winnerImage.style.backgroundImage = `url(images/${winner.classNumber}.jpeg)`;
+        winnerDetails.textContent = `Name: ${winner.name}`;
+        winnerPopup.classList.remove("hidden");
 
-    // Remove winner from pool
-    removeWinnerButton.onclick = () => {
-        participants = participants.filter(p => p !== winner);
-        renderPool();
-        renderParticipantList();
-        winnerPopup.classList.add("hidden");
-    };
+        winners.push(winner.name);
 
-    // Close popup
-    closePopupButton.onclick = () => {
-        winnerPopup.classList.add("hidden");
-    };
+        // Remove winner if selected
+        removeWinnerButton.onclick = () => {
+            participants = participants.filter(p => p !== winner);
+            renderPool();
+            winnerPopup.classList.add("hidden");
+        };
+
+        closePopupButton.onclick = () => {
+            winnerPopup.classList.add("hidden");
+        };
+    }, 2000); // Delay matches the animation
 }
 
-// Manage participants
+function renderParticipantList() {
+    participantList.innerHTML = participants
+        .map(
+            p => `
+            <label>
+                <input type="checkbox" value="${p.classNumber}">
+                ${p.name} (${p.gender})
+            </label><br>
+        `
+        )
+        .join("");
+}
+
 function openManageParticipants() {
     renderParticipantList();
     manageParticipants.classList.remove("hidden");
@@ -117,7 +113,6 @@ function openManageParticipants() {
     };
 }
 
-// Show Winner List
 function openWinnerList() {
     winnerList.innerHTML = winners.map(name => `<li>${name}</li>`).join("");
     winnerListPopup.classList.remove("hidden");
