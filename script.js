@@ -52,11 +52,7 @@ function drawParticipant() {
 
     setTimeout(() => {
         clearInterval(interval);
-        const winner = participants.find(
-            p => p.classNumber == fishes[glowingIndex].style.backgroundImage.match(/(\d+)\.jpeg/)[1]
-        );
-
-        // Winner Popup
+        const winner = participants[Math.floor(Math.random() * participants.length)];
         const winnerImage = document.getElementById("winnerImage");
         winnerImage.style.backgroundImage = `url(images/${winner.classNumber}.jpeg)`;
         document.getElementById("winnerDetails").textContent = `Name: ${winner.name}`;
@@ -69,3 +65,15 @@ function drawParticipant() {
 // Event Listeners
 genderFilter.addEventListener("change", renderPool);
 drawButton.addEventListener("click", drawParticipant);
+viewPoolButton.addEventListener("click", () => {
+    const participantList = document.getElementById("participantList");
+    participantList.innerHTML = participants
+        .map(p => `<div>${p.name} (${p.gender})</div>`)
+        .join("");
+    document.getElementById("manageParticipants").classList.remove("hidden");
+});
+viewWinnersButton.addEventListener("click", () => {
+    const winnerList = document.getElementById("winnerList");
+    winnerList.innerHTML = winners.map(w => `<li>${w}</li>`).join("");
+    document.getElementById("winnerListPopup").classList.remove("hidden");
+});
