@@ -1,31 +1,31 @@
 body {
     font-family: Arial, sans-serif;
-    text-align: center;
-    padding: 20px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f8ff;
 }
 
-h1 {
-    margin-bottom: 20px;
+header {
+    margin: 20px 0;
 }
 
-.actions button {
-    margin: 10px;
+header button {
+    margin: 0 10px;
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
 }
 
-.pool {
+#pool {
     position: relative;
-    width: 100%;
-    max-width: 600px;
+    width: 600px;
     height: 400px;
-    background: radial-gradient(circle at center, #6ccff6, #1e90ff);
-    border: 2px solid #333;
-    margin: 20px auto;
+    background: linear-gradient(to bottom, #87CEFA, #4682B4);
+    border-radius: 20px;
     overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 255, 0.5);
 }
 
 .fish {
@@ -34,56 +34,30 @@ h1 {
     height: 60px;
     background-size: cover;
     border-radius: 50%;
-    animation: swim 4s infinite;
-}
-
-@keyframes swim {
-    0% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
-
-.hidden {
-    display: none;
+    transition: top 3s, left 3s;
+    cursor: pointer;
 }
 
 .modal {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 500px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     z-index: 1000;
-    display: none;
 }
 
 .modal-content {
-    position: relative;
-}
-
-.close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-#winnerContainer {
-    margin-top: 20px;
-    background-color: #f0f0f0;
+    background: white;
     padding: 20px;
-    border-radius: 5px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.hidden {
     display: none;
 }
