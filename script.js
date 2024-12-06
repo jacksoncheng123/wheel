@@ -17,23 +17,6 @@ const viewPoolButton = document.getElementById("viewPoolButton");
 const viewWinnersButton = document.getElementById("viewWinnersButton");
 const addParticipantButton = document.getElementById("addParticipantButton");
 
-// Render pool
-function renderPool() {
-    const selectedGender = genderFilter.value;
-    const filteredParticipants = participants.filter(
-        p => selectedGender === "all" || p.gender === selectedGender
-    );
-
-    pool.innerHTML = "";
-
-    filteredParticipants.forEach(participant => {
-        const fish = document.createElement("div");
-        fish.className = "fish";
-        fish.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
-        pool.appendChild(fish);
-    });
-}
-
 // Draw participant
 function drawParticipant() {
     const fishes = Array.from(pool.children);
