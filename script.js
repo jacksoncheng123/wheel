@@ -4,9 +4,16 @@ const pool = document.getElementById("pool");
 const genderSelect = document.getElementById("gender");
 const winnerContainer = document.getElementById("winnerContainer");
 const winnerMessage = document.getElementById("winnerMessage");
-const addParticipantForm = document.getElementById("addParticipantForm");
 
-// Fetch participants from participants.json
+// Modals
+const addParticipantModal = document.getElementById("addParticipantModal");
+const participantsModal = document.getElementById("participantsModal");
+const closeModal = document.getElementById("closeModal");
+const closeParticipantsModal = document.getElementById("closeParticipantsModal");
+const addParticipantButton = document.getElementById("addParticipantButton");
+const viewPoolButton = document.getElementById("viewPoolButton");
+
+// Fetch participants
 fetch("participants.json")
     .then(response => response.json())
     .then(data => {
@@ -15,20 +22,15 @@ fetch("participants.json")
     })
     .catch(error => console.error("Error loading participants:", error));
 
-// Render the pool with fishes
+// Render the pool
 function renderPool() {
-    pool.innerHTML = '';  // Clear the pool
-    fishes = [];  // Clear the fishes array
+    pool.innerHTML = "";
+    fishes = [];
 
-    const filteredParticipants = 
+    const filteredParticipants =
         genderSelect.value === "all"
             ? participants
             : participants.filter(p => p.gender === genderSelect.value);
-
-    if (filteredParticipants.length === 0) {
-        pool.innerHTML = '<p>No participants in the pool!</p>';
-        return;
-    }
 
     filteredParticipants.forEach(participant => {
         const fish = document.createElement("div");
@@ -36,46 +38,26 @@ function renderPool() {
         fish.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
         fish.style.top = `${Math.random() * 90}%`;
         fish.style.left = `${Math.random() * 90}%`;
-        fish.dataset.name = participant.name;
-        fish.dataset.classNumber = participant.classNumber;
         pool.appendChild(fish);
         fishes.push(fish);
 
-        // Add fish movement
+        // Smooth animation
         setInterval(() => {
             fish.style.top = `${Math.random() * 90}%`;
             fish.style.left = `${Math.random() * 90}%`;
-        }, 2000);
+        }, 3000);
     });
 }
 
-// Add new participant
-addParticipantForm.addEventListener("submit", function(event) {
-    event.preventDefault();
-    const name = document.getElementById("participantName").value;
-    const gender = document.getElementById("participantGender").value;
-    const classNumber = participants.length + 1; // Auto-increment class number
-
-    const newParticipant = {
-        name: name,
-        gender: gender,
-        classNumber: classNumber
-    };
-
-    participants.push(newParticipant);
-    renderPool();
-    addParticipantForm.reset();
-});
-
-// Random draw on pool click
+// Draw a random participant
 pool.addEventListener("click", () => {
-    const filteredParticipants = 
+    const filteredParticipants =
         genderSelect.value === "all"
             ? participants
             : participants.filter(p => p.gender === genderSelect.value);
 
     if (filteredParticipants.length === 0) {
-        winnerMessage.innerHTML = "No participants available!";
+        winnerMessage.innerText = "No participants in the pool!";
         winnerContainer.classList.remove("hidden");
         return;
     }
@@ -85,27 +67,50 @@ pool.addEventListener("click", () => {
     displayWinner(winner);
 });
 
-// Display winner and options
+// Display winner
 function displayWinner(winner) {
-    winnerMessage.innerHTML = `Winner: ${winner.name}, Class Number: ${winner.classNumber}`;
+    winnerMessage.innerHTML = `Winner: ${winner.name}`;
     winnerContainer.classList.remove("hidden");
-    winnerContainer.dataset.classNumber = winner.classNumber;
 }
 
-// Remove winner
-function removeWinner() {
-    const classNumber = winnerContainer.dataset.classNumber;
-    participants = participants.filter(p => p.classNumber !== classNumber);
+// Modals for Add/View Participants
+addParticipantButton.addEventListener("click", () => {
+    addParticipantModal.classList.remove("hidden");
+});
+
+closeModal.addEventListener("click", () => {
+    addParticipantModal.classList.add("hidden");
+});
+
+viewPoolButton.addEventListener("click", () => {
+    updateParticipantsList();
+    participantsModal.classList.remove("hidden");
+});
+
+closeParticipantsModal.addEventListener("click", () => {
+    participantsModal.classList.add("hidden");
+});
+
+// Update participants list in view modal
+function updateParticipantsList() {
+    const list = document.getElementById("participantsList");
+    list.innerHTML = "";
+
+    participants.forEach(p => {
+        const li = document.createElement("li");
+        li.innerHTML = `<input type="checkbox" value="${p.classNumber}"> ${p.name}`;
+        list.appendChild(li);
+    });
+}
+
+// Remove selected participants
+document.getElementById("removeSelectedButton").addEventListener("click", () => {
+    const checkboxes = document.querySelectorAll("#participantsList input:checked");
+    checkboxes.forEach(box => {
+        const classNumber = box.value;
+        participants = participants.filter(p => p.classNumber !== classNumber);
+    });
+
+    updateParticipantsList();
     renderPool();
-    closeWinner();
-}
-
-// Keep winner
-function keepWinner() {
-    closeWinner();
-}
-
-// Close winner container
-function closeWinner() {
-    winnerContainer.classList.add("hidden");
-}
+});
