@@ -25,26 +25,23 @@ body {
     overflow: hidden;
 }
 
-/* Moving images */
+/* Moving Images in Circular Animation */
 .fish {
     width: 80px;
     height: 80px;
     background-size: cover;
     background-position: center;
     border-radius: 50%;
-    animation: float 5s infinite ease-in-out;
+    position: absolute;
+    animation: swim 10s infinite linear;
 }
 
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-10px);
-    }
+@keyframes swim {
+    0% { transform: rotate(0deg) translate(150px) rotate(0deg); }
+    100% { transform: rotate(360deg) translate(150px) rotate(-360deg); }
 }
 
-/* Draw animation */
+/* Draw Animation */
 .fish.drawing {
     border: 5px solid #ffd700;
     box-shadow: 0 0 10px 5px #ffd700;
