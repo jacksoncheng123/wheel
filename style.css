@@ -9,22 +9,26 @@ body {
     align-items: center;
 }
 
+h1 {
+    margin-bottom: 20px;
+}
+
 /* Pool */
 .pool {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    background-color: #d4f1f9;
-    padding: 20px;
-    border-radius: 20px;
-    width: 90%;
-    height: 500px;
+    gap: 15px;
+    background-color: #9bcffb;
+    padding: 30px;
+    border-radius: 30px;
+    width: 80%;
+    height: 600px;
     position: relative;
     overflow: hidden;
 }
 
-/* Moving Images in Circular Animation */
+/* Fish (Image inside Pool) */
 .fish {
     width: 100px;
     height: 100px;
@@ -32,22 +36,33 @@ body {
     background-position: center;
     border-radius: 50%;
     position: absolute;
-    animation: swim 10s infinite linear;
+    animation: flow 10s infinite linear;
 }
 
-@keyframes swim {
-    0% { transform: rotate(0deg) translate(200px) rotate(0deg); }
-    100% { transform: rotate(360deg) translate(200px) rotate(-360deg); }
+@keyframes flow {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(10px, -20px); }
+    50% { transform: translate(-10px, 10px); }
+    75% { transform: translate(20px, -10px); }
+    100% { transform: translate(0, 0); }
 }
 
-/* Draw Animation */
-.fish.drawing {
-    border: 5px solid #ffd700;
-    box-shadow: 0 0 10px 5px #ffd700;
-    animation: none;
+/* Buttons */
+button {
+    margin: 10px 5px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-/* Popup */
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Popups */
 .popup {
     position: fixed;
     top: 50%;
@@ -72,18 +87,4 @@ body {
     border-radius: 10px;
     margin: 10px auto;
     width: 100%;
-}
-
-button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
 }
