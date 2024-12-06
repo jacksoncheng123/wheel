@@ -8,21 +8,44 @@
 </head>
 <body>
     <h1>Lucky Draw</h1>
+
+    <!-- Gender Filter -->
     <label for="genderFilter">Choose gender:</label>
     <select id="genderFilter">
         <option value="all">All</option>
         <option value="male">Male</option>
         <option value="female">Female</option>
     </select>
+
+    <!-- Participants Pool -->
     <div id="pool" class="pool"></div>
     <button id="drawButton">Draw</button>
 
+    <!-- Winner Popup -->
     <div id="winnerPopup" class="popup hidden">
         <h2>Winner!</h2>
         <div id="winnerImage" class="winner-image"></div>
         <p id="winnerDetails"></p>
         <button id="removeWinnerButton">Remove from pool</button>
         <button id="closePopupButton">Close</button>
+    </div>
+
+    <!-- Add Participants Form -->
+    <div id="addParticipants" class="management">
+        <h3>Add New Participant</h3>
+        <input id="newName" type="text" placeholder="Name">
+        <select id="newGender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+        <button id="addParticipantButton">Add Participant</button>
+    </div>
+
+    <!-- Participants Management -->
+    <div id="manageParticipants" class="management">
+        <h3>Manage Participants</h3>
+        <div id="participantList"></div>
+        <button id="removeSelectedButton">Remove Selected</button>
     </div>
 
     <script src="script.js"></script>
