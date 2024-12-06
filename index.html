@@ -17,16 +17,27 @@
         <option value="female">Female</option>
     </select>
 
-    <!-- Add New Participant Form -->
-    <h2>Add New Participant</h2>
-    <form id="addParticipantForm">
-        <input type="text" id="participantName" placeholder="Enter name" required>
-        <select id="participantGender">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
-        <button type="submit">Add Participant</button>
-    </form>
+    <!-- Add Participant and View Pool -->
+    <div class="actions">
+        <button id="addParticipantButton">Add Participant</button>
+        <button id="viewPoolButton">View Pool</button>
+    </div>
+
+    <!-- Modal for Adding Participants -->
+    <div id="addParticipantModal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeModal" class="close">&times;</span>
+            <h2>Add New Participant</h2>
+            <form id="addParticipantForm">
+                <input type="text" id="participantName" placeholder="Enter name" required>
+                <select id="participantGender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
+                <button type="submit">Add Participant</button>
+            </form>
+        </div>
+    </div>
 
     <!-- Pool -->
     <div id="pool" class="pool"></div>
@@ -36,6 +47,16 @@
         <h2 id="winnerMessage"></h2>
         <button onclick="removeWinner()">Remove from pool</button>
         <button onclick="keepWinner()">Keep in pool</button>
+    </div>
+
+    <!-- Participants Pool Modal -->
+    <div id="participantsModal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeParticipantsModal" class="close">&times;</span>
+            <h2>Participants Pool</h2>
+            <ul id="participantsList"></ul>
+            <button id="removeSelectedButton">Remove Selected</button>
+        </div>
     </div>
 
     <script src="script.js"></script>
