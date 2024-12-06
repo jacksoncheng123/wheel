@@ -10,8 +10,8 @@ fetch("participants.json")
     })
     .catch(error => console.error("Error loading participants:", error));
 
-const genderFilter = document.getElementById("genderFilter");
 const pool = document.getElementById("pool");
+const genderFilter = document.getElementById("genderFilter");
 const drawButton = document.getElementById("drawButton");
 const viewPoolButton = document.getElementById("viewPoolButton");
 const viewWinnersButton = document.getElementById("viewWinnersButton");
@@ -43,12 +43,11 @@ function drawParticipant() {
     }
 
     let glowingIndex = 0;
-
     const interval = setInterval(() => {
         fishes.forEach(fish => fish.classList.remove("drawing"));
         fishes[glowingIndex].classList.add("drawing");
         glowingIndex = (glowingIndex + 1) % fishes.length;
-    }, 200);
+    }, 100);
 
     setTimeout(() => {
         clearInterval(interval);
@@ -65,15 +64,3 @@ function drawParticipant() {
 // Event Listeners
 genderFilter.addEventListener("change", renderPool);
 drawButton.addEventListener("click", drawParticipant);
-viewPoolButton.addEventListener("click", () => {
-    const participantList = document.getElementById("participantList");
-    participantList.innerHTML = participants
-        .map(p => `<div>${p.name} (${p.gender})</div>`)
-        .join("");
-    document.getElementById("manageParticipants").classList.remove("hidden");
-});
-viewWinnersButton.addEventListener("click", () => {
-    const winnerList = document.getElementById("winnerList");
-    winnerList.innerHTML = winners.map(w => `<li>${w}</li>`).join("");
-    document.getElementById("winnerListPopup").classList.remove("hidden");
-});
