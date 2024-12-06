@@ -1,19 +1,14 @@
 let participants = [];
 let fishes = [];
+
+// Elements
 const pool = document.getElementById("pool");
-const genderSelect = document.getElementById("gender");
 const winnerContainer = document.getElementById("winnerContainer");
 const winnerMessage = document.getElementById("winnerMessage");
-
-// Modals
 const addParticipantModal = document.getElementById("addParticipantModal");
 const participantsModal = document.getElementById("participantsModal");
-const closeModal = document.getElementById("closeModal");
-const closeParticipantsModal = document.getElementById("closeParticipantsModal");
 const addParticipantButton = document.getElementById("addParticipantButton");
 const viewPoolButton = document.getElementById("viewPoolButton");
-
-// Draw Button
 const drawButton = document.getElementById("drawButton");
 
 // Fetch participants
@@ -30,12 +25,7 @@ function renderPool() {
     pool.innerHTML = "";
     fishes = [];
 
-    const filteredParticipants =
-        genderSelect.value === "all"
-            ? participants
-            : participants.filter(p => p.gender === genderSelect.value);
-
-    filteredParticipants.forEach(participant => {
+    participants.forEach(participant => {
         const fish = document.createElement("div");
         fish.className = "fish";
         fish.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
@@ -44,7 +34,7 @@ function renderPool() {
         pool.appendChild(fish);
         fishes.push(fish);
 
-        // Smooth animation
+        // Smooth movement
         setInterval(() => {
             fish.style.top = `${Math.random() * 90}%`;
             fish.style.left = `${Math.random() * 90}%`;
@@ -52,7 +42,7 @@ function renderPool() {
     });
 }
 
-// Add a new participant
+// Add a participant
 document.getElementById("addParticipantForm").addEventListener("submit", event => {
     event.preventDefault();
 
@@ -60,43 +50,34 @@ document.getElementById("addParticipantForm").addEventListener("submit", event =
     const gender = document.getElementById("participantGender").value;
 
     if (name) {
-        const newParticipant = {
+        participants.push({
             name,
             gender,
-            classNumber: 99, // Default class number for new participants
-        };
-
-        participants.push(newParticipant);
+            classNumber: 99, // Default class number
+        });
         renderPool();
         addParticipantModal.classList.add("hidden");
-        document.getElementById("addParticipantForm").reset();
+        event.target.reset();
     }
 });
 
 // Draw a random participant
-function drawRandomParticipant() {
-    const filteredParticipants =
-        genderSelect.value === "all"
-            ? participants
-            : participants.filter(p => p.gender === genderSelect.value);
-
-    if (filteredParticipants.length === 0) {
-        winnerMessage.innerText = "No participants in the pool!";
-        winnerContainer.classList.remove("hidden");
+drawButton.addEventListener("click", () => {
+    if (participants.length === 0) {
+        alert("No participants to draw from!");
         return;
     }
 
-    const winnerIndex = Math.floor(Math.random() * filteredParticipants.length);
-    const winner = filteredParticipants[winnerIndex];
+    const winnerIndex = Math.floor(Math.random() * participants.length);
+    const winner = participants[winnerIndex];
     displayWinner(winner);
-}
+});
 
-// Display winner
+// Display the winner
 function displayWinner(winner) {
     winnerMessage.innerHTML = `Winner: ${winner.name}`;
     winnerContainer.classList.remove("hidden");
 
-    // Handle removal decision
     window.removeWinner = () => {
         participants = participants.filter(p => p !== winner);
         winnerContainer.classList.add("hidden");
@@ -108,16 +89,9 @@ function displayWinner(winner) {
     };
 }
 
-// Draw button click
-drawButton.addEventListener("click", drawRandomParticipant);
-
-// Modals for Add/View Participants
+// Modal interactions
 addParticipantButton.addEventListener("click", () => {
     addParticipantModal.classList.remove("hidden");
-});
-
-closeModal.addEventListener("click", () => {
-    addParticipantModal.classList.add("hidden");
 });
 
 viewPoolButton.addEventListener("click", () => {
@@ -125,11 +99,15 @@ viewPoolButton.addEventListener("click", () => {
     participantsModal.classList.remove("hidden");
 });
 
-closeParticipantsModal.addEventListener("click", () => {
+document.getElementById("closeModal").addEventListener("click", () => {
+    addParticipantModal.classList.add("hidden");
+});
+
+document.getElementById("closeParticipantsModal").addEventListener("click", () => {
     participantsModal.classList.add("hidden");
 });
 
-// Update participants list in view modal
+// Update participants list in pool
 function updateParticipantsList() {
     const list = document.getElementById("participantsList");
     list.innerHTML = "";
@@ -144,8 +122,7 @@ function updateParticipantsList() {
 // Remove selected participants
 document.getElementById("removeSelectedButton").addEventListener("click", () => {
     const checkboxes = document.querySelectorAll("#participantsList input:checked");
-    const selectedIndexes = Array.from(checkboxes).map(box => parseInt(box.value));
-
+    const selectedIndexes = Array.from(checkboxes).map(cb => parseInt(cb.value));
     participants = participants.filter((_, index) => !selectedIndexes.includes(index));
     updateParticipantsList();
     renderPool();
