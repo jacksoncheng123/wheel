@@ -5,6 +5,7 @@ let fishes = [];
 const pool = document.getElementById("pool");
 const winnerContainer = document.getElementById("winnerContainer");
 const winnerMessage = document.getElementById("winnerMessage");
+const genderFilter = document.getElementById("genderFilter");
 const addParticipantModal = document.getElementById("addParticipantModal");
 const participantsModal = document.getElementById("participantsModal");
 const addParticipantButton = document.getElementById("addParticipantButton");
@@ -63,13 +64,20 @@ document.getElementById("addParticipantForm").addEventListener("submit", event =
 
 // Draw a random participant
 drawButton.addEventListener("click", () => {
-    if (participants.length === 0) {
-        alert("No participants to draw from!");
+    const selectedGender = genderFilter.value;
+    let filteredParticipants = participants;
+
+    if (selectedGender !== "all") {
+        filteredParticipants = participants.filter(p => p.gender === selectedGender);
+    }
+
+    if (filteredParticipants.length === 0) {
+        alert("No participants matching the criteria!");
         return;
     }
 
-    const winnerIndex = Math.floor(Math.random() * participants.length);
-    const winner = participants[winnerIndex];
+    const winnerIndex = Math.floor(Math.random() * filteredParticipants.length);
+    const winner = filteredParticipants[winnerIndex];
     displayWinner(winner);
 });
 
