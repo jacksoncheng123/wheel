@@ -1,5 +1,6 @@
 let participants = [];
 let winners = [];
+let originalParticipants = []; // New array to store the original participant list
 const ORIGINAL_PARTICIPANTS_URL = "participants.json";
 
 // Fetch participants
@@ -7,7 +8,10 @@ function loadParticipants() {
     fetch(ORIGINAL_PARTICIPANTS_URL)
         .then(response => response.json())
         .then(data => {
-            participants = data;
+            originalParticipants = data; // Store original list
+            participants = data.filter(p => 
+                !winners.some(winner => winner.name === p.name)
+            ); // Remove winners from participants
             renderPool();
         })
         .catch(error => console.error("Error loading participants:", error));
@@ -131,8 +135,13 @@ function drawParticipant() {
 
 // Reset Participants
 function resetParticipants() {
-    winners = []; // Clear winners
-    loadParticipants(); // Reload original participants
+    // Reload participants, excluding current winners
+    participants = originalParticipants.filter(p => 
+        !winners.some(winner => winner.name === p.name)
+    );
+
+    // Re-render pool
+    renderPool();
     manageParticipantsPopup.classList.add("hidden");
 }
 
@@ -209,7 +218,7 @@ function addNewParticipant() {
     if (nameInput.value && genderInput.value) {
         const newParticipant = {
             name: nameInput.value,
-            classNumber: (participants.length + 1).toString(),
+            classNumber: (participants.length + originalParticipants.length + 1).toString(),
             gender: genderInput.value
         };
         
