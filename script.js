@@ -240,7 +240,7 @@ function addNewParticipant() {
     if (nameInput.value && genderInput.value) {
         const newParticipant = {
             name: nameInput.value,
-            classNumber: (participants.length + 1).toString(),
+            classNumber: '99',
             gender: genderInput.value
         };
 
