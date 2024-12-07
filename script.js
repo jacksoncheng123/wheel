@@ -266,4 +266,19 @@ drawButton.addEventListener("click", drawParticipant);
 viewPoolButton.addEventListener("click", viewParticipantsPool);
 viewWinnersButton.addEventListener("click", viewWinnersList);
 addParticipantButton.addEventListener("click", () => addParticipantPopup.classList.remove("hidden"));
-removeFromPoolButton.addEventListener("click", () => closePopup(winnerPopup));
+removeFromPoolButton.addEventListener("click", () => {
+    const winnerName = removeFromPoolButton.dataset.winnerName;
+    if (!winnerName) {
+        console.error("No winner selected for removal.");
+        return;
+    }
+
+    // Remove the winner from participants array
+    participants = participants.filter(participant => participant.name !== winnerName);
+
+    // Re-render the pool after removal
+    renderPool();
+
+    // Close the winner popup
+    closePopup(winnerPopup);
+});
