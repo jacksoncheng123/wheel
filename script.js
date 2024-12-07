@@ -1,6 +1,5 @@
 let participants = [];
 let winners = [];
-let filteredParticipants = [];
 
 // Fetch participants
 fetch("participants.json")
@@ -9,7 +8,7 @@ fetch("participants.json")
         participants = data;
         renderPool();
     })
-    catch(error => console.error("Error loading participants:", error));
+    .catch(error => console.error("Error loading participants:", error));
 
 // DOM Elements
 const pool = document.getElementById("pool");
@@ -31,56 +30,52 @@ function renderPool() {
     pool.innerHTML = ''; // Clear previous fishes
     
     // Animate fish movement within pool
-    participants.forEach((participant) => {
+    participants.forEach((participant, index) => {
         const fish = document.createElement('div');
         fish.classList.add('fish');
         fish.dataset.name = participant.name;
+        fish.dataset.index = index;
         fish.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
         
-        // Randomize initial position and movement
+        // Randomize initial position
         fish.style.left = `${Math.random() * (pool.clientWidth - 100)}px`;
         fish.style.top = `${Math.random() * (pool.clientHeight - 100)}px`;
         
+        // Create unique animation for each fish
+        const uniqueAnimation = createUniqueAnimation(index);
+        fish.style.animationName = uniqueAnimation;
+        
         pool.appendChild(fish);
     });
-
-    // Start fish animation
-    animateFish();
 }
 
-// Animate fish to move freely in the pool
-function animateFish() {
-    const fishes = document.querySelectorAll('.fish');
+// Create unique animation for each fish
+function createUniqueAnimation(index) {
+    const animationName = `swim-${index}`;
     
-    fishes.forEach(fish => {
-        // Random movement parameters
-        const speedX = (Math.random() - 0.5) * 4;
-        const speedY = (Math.random() - 0.5) * 4;
-        const rotationSpeed = (Math.random() - 0.5) * 10;
-
-        function move() {
-            const currentLeft = parseFloat(fish.style.left);
-            const currentTop = parseFloat(fish.style.top);
-
-            let newLeft = currentLeft + speedX;
-            let newTop = currentTop + speedY;
-
-            // Bounce off walls
-            if (newLeft <= 0 || newLeft >= pool.clientWidth - 100) {
-                speedX *= -1;
-            }
-            if (newTop <= 0 || newTop >= pool.clientHeight - 100) {
-                speedY *= -1;
-            }
-
-            fish.style.left = `${newLeft}px`;
-            fish.style.top = `${newTop}px`;
-            fish.style.transform = `rotate(${rotationSpeed}deg)`;
+    // Create a style element for the unique animation
+    const styleSheet = document.styleSheets[0];
+    const keyframes = `@keyframes ${animationName} {
+        0% { 
+            transform: translate(0, 0) rotate(${Math.random() * 10 - 5}deg);
         }
-
-        // Continuous movement
-        setInterval(move, 50);
-    });
+        25% { 
+            transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px) rotate(${Math.random() * 10 - 5}deg);
+        }
+        50% { 
+            transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px) rotate(${Math.random() * 10 - 5}deg);
+        }
+        75% { 
+            transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px) rotate(${Math.random() * 10 - 5}deg);
+        }
+        100% { 
+            transform: translate(0, 0) rotate(${Math.random() * 10 - 5}deg);
+        }
+    }`;
+    
+    styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+    
+    return animationName;
 }
 
 // Draw Participant based on selected gender
@@ -132,16 +127,30 @@ function drawParticipant() {
 function viewParticipantsPool() {
     participantList.innerHTML = ''; // Clear previous list
     
-    participants.forEach(participant => {
+    participants.forEach((participant, index) => {
         const participantItem = document.createElement('div');
         participantItem.innerHTML = `
             <label>
-                <input type="checkbox" class="participant-checkbox" value="${participant.name}">
+                <input type="checkbox" class="participant-checkbox" value="${participant.name}" data-index="${index}">
                 ${participant.name}
             </label>
         `;
         participantList.appendChild(participantItem);
     });
+
+    // Update popup title
+    const popupTitle = manageParticipantsPopup.querySelector('h2');
+    popupTitle.textContent = 'Manage Participants';
+
+    // Remove any existing buttons
+    const existingButtons = manageParticipantsPopup.querySelectorAll('button:not(:last-child)');
+    existingButtons.forEach(btn => btn.remove());
+
+    // Add Remove Selected button
+    const removeSelectedButton = document.createElement('button');
+    removeSelectedButton.textContent = 'Remove Selected';
+    removeSelectedButton.addEventListener('click', removeSelectedParticipants);
+    manageParticipantsPopup.insertBefore(removeSelectedButton, manageParticipantsPopup.lastElementChild);
 
     manageParticipantsPopup.classList.remove("hidden");
 }
@@ -150,10 +159,14 @@ function viewParticipantsPool() {
 function removeSelectedParticipants() {
     const selectedCheckboxes = document.querySelectorAll('.participant-checkbox:checked');
     
-    selectedCheckboxes.forEach(checkbox => {
-        participants = participants.filter(p => p.name !== checkbox.value);
-    });
+    // Create a new participants array excluding selected participants
+    participants = participants.filter(participant => 
+        !Array.from(selectedCheckboxes).some(checkbox => 
+            checkbox.value === participant.name
+        )
+    );
 
+    // Re-render pool and close popup
     renderPool();
     manageParticipantsPopup.classList.add("hidden");
 }
@@ -203,9 +216,3 @@ drawButton.addEventListener("click", drawParticipant);
 viewPoolButton.addEventListener("click", viewParticipantsPool);
 viewWinnersButton.addEventListener("click", viewWinnersList);
 addParticipantButton.addEventListener("click", () => addParticipantPopup.classList.remove("hidden"));
-
-// Add listener for remove selected participants
-const removeSelectedButton = document.createElement('button');
-removeSelectedButton.textContent = 'Remove Selected';
-removeSelectedButton.addEventListener('click', removeSelectedParticipants);
-manageParticipantsPopup.appendChild(removeSelectedButton);
