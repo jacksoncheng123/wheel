@@ -32,22 +32,28 @@ const participantList = document.getElementById("participantList");
 const winnerListPopup = document.getElementById("winnerListPopup");
 const addParticipantPopup = document.getElementById("addParticipantPopup");
 
-// Render Pool with Fish
+// Render Pool
 function renderPool() {
-    pool.innerHTML = ''; // Clear previous fishes
+    pool.innerHTML = ''; // Clear previous images
 
-    const fishPositions = []; // Store positions of each fish
+    const fishPositions = []; // Store positions of each image
 
     participants.forEach((participant, index) => {
         const fish = document.createElement('div');
         fish.classList.add('fish');
         fish.dataset.name = participant.name;
+        fish.dataset.gender = participant.gender;
         fish.dataset.index = index;
         fish.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
 
+        // Filter by gender
+        if (genderFilter.value !== 'All' && genderFilter.value !== participant.gender) {
+            return;
+        }
+
         // Calculate a position that avoids overlap
         let left, top, tooClose;
-        const fishWidth = 100; // Approximate fish size
+        const fishWidth = 100;
         const fishHeight = 100;
 
         do {
@@ -55,20 +61,17 @@ function renderPool() {
             left = Math.random() * (pool.clientWidth - fishWidth);
             top = Math.random() * (pool.clientHeight - fishHeight);
 
-            // Check if the position is too close to an existing fish
             for (const pos of fishPositions) {
                 const distance = Math.sqrt((left - pos.left) ** 2 + (top - pos.top) ** 2);
-                if (distance < fishWidth) { // Minimum allowed distance
+                if (distance < fishWidth) {
                     tooClose = true;
                     break;
                 }
             }
         } while (tooClose);
 
-        // Store the valid position
         fishPositions.push({ left, top });
 
-        // Apply position
         fish.style.left = `${left}px`;
         fish.style.top = `${top}px`;
 
@@ -85,31 +88,21 @@ function createUniqueAnimation(index) {
     const animationName = `swim-${index}`;
     const styleSheet = document.styleSheets[0];
     const keyframes = `@keyframes ${animationName} {
-        0% { 
-            transform: translate(0, 0) rotate(${Math.random() * 10 - 5}deg);
-        }
-        25% { 
-            transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px) rotate(${Math.random() * 10 - 5}deg);
-        }
-        50% { 
-            transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px) rotate(${Math.random() * 10 - 5}deg);
-        }
-        75% { 
-            transform: translate(${Math.random() * 30 - 15}px, ${Math.random() * 30 - 15}px) rotate(${Math.random() * 10 - 5}deg);
-        }
-        100% { 
-            transform: translate(0, 0) rotate(${Math.random() * 10 - 5}deg);
-        }
+        0% { transform: translate(0, 0); }
+        25% { transform: translate(${Math.random() * 30}px, ${Math.random() * 30}px); }
+        50% { transform: translate(${Math.random() * 30}px, ${Math.random() * 30}px); }
+        75% { transform: translate(${Math.random() * 30}px, ${Math.random() * 30}px); }
+        100% { transform: translate(0, 0); }
     }`;
     styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
     return animationName;
 }
 
-// Draw Participant based on selected gender
+// Draw Participant
 function drawParticipant() {
     const selectedGender = genderFilter.value;
-    const genderFilteredParticipants = participants.filter(p => 
-        selectedGender === 'All' || p.gender.toLowerCase() === selectedGender.toLowerCase()
+    const genderFilteredParticipants = participants.filter(p =>
+        selectedGender === 'All' || p.gender === selectedGender
     );
 
     if (genderFilteredParticipants.length === 0) {
@@ -122,27 +115,28 @@ function drawParticipant() {
 
     // Animate selection
     const interval = setInterval(() => {
-        fishes.forEach(fish => {
-            fish.classList.remove("drawing");
-            fish.style.transform = 'scale(1)';
-        });
+        fishes.forEach(fish => fish.classList.remove("drawing"));
         fishes[glowingIndex].classList.add("drawing");
-        fishes[glowingIndex].style.transform = 'scale(1.2)';
         glowingIndex = (glowingIndex + 1) % fishes.length;
     }, 100);
 
-    // Select winner
     setTimeout(() => {
         clearInterval(interval);
         const winnerIndex = Math.floor(Math.random() * genderFilteredParticipants.length);
         const winner = genderFilteredParticipants[winnerIndex];
 
-        // Add winner to winners list (without removing from pool unless explicitly removed later)
         if (!winners.find(w => w.name === winner.name)) {
             winners.push(winner);
         }
 
-        // Display winner in popup
+        fishes.forEach(fish => {
+            if (fish.dataset.name === winner.name) {
+                fish.classList.add("winner-glow");
+            } else {
+                fish.classList.remove("drawing");
+            }
+        });
+
         winnerImage.style.backgroundImage = `url(images/${winner.classNumber}.jpeg)`;
         winnerDetails.textContent = `Name: ${winner.name}`;
         removeFromPoolButton.dataset.winnerName = winner.name;
@@ -200,8 +194,8 @@ function viewParticipantsPool() {
 function removeSelectedParticipants() {
     const selectedCheckboxes = document.querySelectorAll('.participant-checkbox:checked');
 
-    participants = participants.filter(participant => 
-        !Array.from(selectedCheckboxes).some(checkbox => 
+    participants = participants.filter(participant =>
+        !Array.from(selectedCheckboxes).some(checkbox =>
             checkbox.value === participant.name
         )
     );
@@ -267,6 +261,7 @@ function closePopup(popupElement) {
 }
 
 // Event Listeners
+genderFilter.addEventListener("change", renderPool);
 drawButton.addEventListener("click", drawParticipant);
 viewPoolButton.addEventListener("click", viewParticipantsPool);
 viewWinnersButton.addEventListener("click", viewWinnersList);
