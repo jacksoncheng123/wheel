@@ -45,8 +45,12 @@ h1 {
 
 .fish.drawing {
     border-color: gold;
-    transform: scale(1.2);
+    border-width: 3px; /* Make the border more defined */
+    border-style: solid;
+    transform: scale(1.5); /* Increase the scaling for more emphasis */
     z-index: 10;
+    box-shadow: 0 0 25px 10px gold; /* Add a bright glowing effect */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth animation */
 }
 
 /* Buttons */
