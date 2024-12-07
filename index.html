@@ -2,64 +2,67 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucky Draw</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Lucky Draw</h1>
 
-    <!-- Gender Filter -->
-    <label for="genderFilter">Choose gender:</label>
     <select id="genderFilter">
-        <option value="all">All</option>
-        <option value="male">Male</option>
-        <option value="female">Female</option>
+        <option value="All">All</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
     </select>
 
-    <!-- Pool -->
-    <div id="pool" class="pool"></div>
-    <button id="drawButton">Draw</button>
-    <button id="viewPoolButton">View Pool</button>
-    <button id="viewWinnersButton">View Winner List</button>
-    <button id="addParticipantButton">Add New Participant</button>
+    <div id="pool" class="pool">
+        <!-- Fish/Participants will be dynamically added here -->
+    </div>
+
+    <div>
+        <button id="drawButton">Draw</button>
+        <button id="viewPoolButton">View Pool</button>
+        <button id="viewWinnersButton">View Winner List</button>
+        <button id="addParticipantButton">Add New Participant</button>
+    </div>
 
     <!-- Winner Popup -->
     <div id="winnerPopup" class="popup hidden">
         <h2>Winner!</h2>
         <div id="winnerImage" class="winner-image"></div>
-        <p id="winnerDetails"></p>
-        <button id="removeWinnerButton">Remove from pool</button>
-        <button id="closePopupButton">Close</button>
+        <div id="winnerDetails"></div>
+        <button onclick="closePopup(document.getElementById('winnerPopup'))">Remove from pool</button>
+        <button onclick="closePopup(document.getElementById('winnerPopup'))">Close</button>
     </div>
 
-    <!-- Add Participant -->
+    <!-- Add Participant Popup -->
     <div id="addParticipantPopup" class="popup hidden">
         <h2>Add Participant</h2>
-        <label for="newParticipantName">Name:</label>
-        <input type="text" id="newParticipantName" placeholder="Enter name">
-        <label for="newParticipantGender">Gender:</label>
-        <select id="newParticipantGender">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-        </select>
-        <button id="addParticipantConfirmButton">Add</button>
-        <button id="closeAddParticipantButton">Close</button>
+        <label>
+            Name: 
+            <input type="text" id="participantName" required>
+        </label>
+        <label>
+            Gender: 
+            <select id="participantGender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </label>
+        <button onclick="addNewParticipant()">Add</button>
+        <button onclick="closePopup(document.getElementById('addParticipantPopup'))">Close</button>
     </div>
 
-    <!-- Participants Management -->
+    <!-- Manage Participants Popup -->
     <div id="manageParticipants" class="popup hidden">
         <h2>Participants Pool</h2>
         <div id="participantList" class="participant-list"></div>
-        <button id="removeSelectedButton">Remove Selected</button>
-        <button id="closeManageButton">Close</button>
+        <button onclick="closePopup(document.getElementById('manageParticipants'))">Close</button>
     </div>
 
-    <!-- Winner List -->
+    <!-- Winner List Popup -->
     <div id="winnerListPopup" class="popup hidden">
         <h2>Winner List</h2>
-        <ul id="winnerList" class="winner-list"></ul>
-        <button id="closeWinnerListButton">Close</button>
+        <button onclick="closePopup(document.getElementById('winnerListPopup'))">Close</button>
     </div>
 
     <script src="script.js"></script>
