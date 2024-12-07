@@ -35,7 +35,9 @@ const addParticipantPopup = document.getElementById("addParticipantPopup");
 // Render Pool with Fish
 function renderPool() {
     pool.innerHTML = ''; // Clear previous fishes
-    
+
+    const fishPositions = []; // Store positions of each fish
+
     participants.forEach((participant, index) => {
         const fish = document.createElement('div');
         fish.classList.add('fish');
@@ -43,9 +45,32 @@ function renderPool() {
         fish.dataset.index = index;
         fish.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
 
-        // Randomize initial position
-        fish.style.left = `${Math.random() * (pool.clientWidth - 100)}px`;
-        fish.style.top = `${Math.random() * (pool.clientHeight - 100)}px`;
+        // Calculate a position that avoids overlap
+        let left, top, tooClose;
+        const fishWidth = 100; // Approximate fish size
+        const fishHeight = 100;
+
+        do {
+            tooClose = false;
+            left = Math.random() * (pool.clientWidth - fishWidth);
+            top = Math.random() * (pool.clientHeight - fishHeight);
+
+            // Check if the position is too close to an existing fish
+            for (const pos of fishPositions) {
+                const distance = Math.sqrt((left - pos.left) ** 2 + (top - pos.top) ** 2);
+                if (distance < fishWidth) { // Minimum allowed distance
+                    tooClose = true;
+                    break;
+                }
+            }
+        } while (tooClose);
+
+        // Store the valid position
+        fishPositions.push({ left, top });
+
+        // Apply position
+        fish.style.left = `${left}px`;
+        fish.style.top = `${top}px`;
 
         // Create unique animation for each fish
         const uniqueAnimation = createUniqueAnimation(index);
