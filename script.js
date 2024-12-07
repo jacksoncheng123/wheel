@@ -9,7 +9,7 @@ fetch("participants.json")
         participants = data;
         renderPool();
     })
-    .catch(error => console.error("Error loading participants:", error));
+    catch(error => console.error("Error loading participants:", error));
 
 // DOM Elements
 const pool = document.getElementById("pool");
@@ -30,31 +30,68 @@ const addParticipantPopup = document.getElementById("addParticipantPopup");
 function renderPool() {
     pool.innerHTML = ''; // Clear previous fishes
     
-    // Filter participants based on gender
-    const selectedGender = genderFilter.value;
-    filteredParticipants = selectedGender === 'All' 
-        ? participants 
-        : participants.filter(p => p.gender.toLowerCase() === selectedGender.toLowerCase());
-
-    filteredParticipants.forEach((participant, index) => {
+    // Animate fish movement within pool
+    participants.forEach((participant) => {
         const fish = document.createElement('div');
         fish.classList.add('fish');
+        fish.dataset.name = participant.name;
         fish.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
         
-        // Randomize initial position
-        const maxWidth = pool.clientWidth - 100;
-        const maxHeight = pool.clientHeight - 100;
-        fish.style.left = `${Math.random() * maxWidth}px`;
-        fish.style.top = `${Math.random() * maxHeight}px`;
+        // Randomize initial position and movement
+        fish.style.left = `${Math.random() * (pool.clientWidth - 100)}px`;
+        fish.style.top = `${Math.random() * (pool.clientHeight - 100)}px`;
         
         pool.appendChild(fish);
     });
+
+    // Start fish animation
+    animateFish();
 }
 
-// Draw Participant
+// Animate fish to move freely in the pool
+function animateFish() {
+    const fishes = document.querySelectorAll('.fish');
+    
+    fishes.forEach(fish => {
+        // Random movement parameters
+        const speedX = (Math.random() - 0.5) * 4;
+        const speedY = (Math.random() - 0.5) * 4;
+        const rotationSpeed = (Math.random() - 0.5) * 10;
+
+        function move() {
+            const currentLeft = parseFloat(fish.style.left);
+            const currentTop = parseFloat(fish.style.top);
+
+            let newLeft = currentLeft + speedX;
+            let newTop = currentTop + speedY;
+
+            // Bounce off walls
+            if (newLeft <= 0 || newLeft >= pool.clientWidth - 100) {
+                speedX *= -1;
+            }
+            if (newTop <= 0 || newTop >= pool.clientHeight - 100) {
+                speedY *= -1;
+            }
+
+            fish.style.left = `${newLeft}px`;
+            fish.style.top = `${newTop}px`;
+            fish.style.transform = `rotate(${rotationSpeed}deg)`;
+        }
+
+        // Continuous movement
+        setInterval(move, 50);
+    });
+}
+
+// Draw Participant based on selected gender
 function drawParticipant() {
-    if (filteredParticipants.length === 0) {
-        alert("No participants available!");
+    const selectedGender = genderFilter.value;
+    const genderFilteredParticipants = participants.filter(p => 
+        selectedGender === 'All' || p.gender.toLowerCase() === selectedGender.toLowerCase()
+    );
+
+    if (genderFilteredParticipants.length === 0) {
+        alert("No participants available for selected gender!");
         return;
     }
 
@@ -75,8 +112,8 @@ function drawParticipant() {
     // Select winner
     setTimeout(() => {
         clearInterval(interval);
-        const winnerIndex = Math.floor(Math.random() * filteredParticipants.length);
-        const winner = filteredParticipants[winnerIndex];
+        const winnerIndex = Math.floor(Math.random() * genderFilteredParticipants.length);
+        const winner = genderFilteredParticipants[winnerIndex];
         
         winnerImage.style.backgroundImage = `url(images/${winner.classNumber}.jpeg)`;
         winnerDetails.textContent = `Name: ${winner.name}`;
@@ -95,13 +132,30 @@ function drawParticipant() {
 function viewParticipantsPool() {
     participantList.innerHTML = ''; // Clear previous list
     
-    filteredParticipants.forEach(participant => {
+    participants.forEach(participant => {
         const participantItem = document.createElement('div');
-        participantItem.textContent = `${participant.name} (${participant.gender})`;
+        participantItem.innerHTML = `
+            <label>
+                <input type="checkbox" class="participant-checkbox" value="${participant.name}">
+                ${participant.name}
+            </label>
+        `;
         participantList.appendChild(participantItem);
     });
 
     manageParticipantsPopup.classList.remove("hidden");
+}
+
+// Remove Selected Participants
+function removeSelectedParticipants() {
+    const selectedCheckboxes = document.querySelectorAll('.participant-checkbox:checked');
+    
+    selectedCheckboxes.forEach(checkbox => {
+        participants = participants.filter(p => p.name !== checkbox.value);
+    });
+
+    renderPool();
+    manageParticipantsPopup.classList.add("hidden");
 }
 
 // View Winners List
@@ -110,7 +164,7 @@ function viewWinnersList() {
     winnerListContent.innerHTML = `
         <h2>Winner List</h2>
         ${winners.map(winner => `<div>${winner.name}</div>`).join('')}
-        <button onclick="document.getElementById('winnerListPopup').classList.add('hidden')">Close</button>
+        <button onclick="closePopup(document.getElementById('winnerListPopup'))">Close</button>
     `;
     winnerListPopup.classList.remove("hidden");
 }
@@ -145,8 +199,13 @@ function closePopup(popupElement) {
 }
 
 // Event Listeners
-genderFilter.addEventListener("change", renderPool);
 drawButton.addEventListener("click", drawParticipant);
 viewPoolButton.addEventListener("click", viewParticipantsPool);
 viewWinnersButton.addEventListener("click", viewWinnersList);
 addParticipantButton.addEventListener("click", () => addParticipantPopup.classList.remove("hidden"));
+
+// Add listener for remove selected participants
+const removeSelectedButton = document.createElement('button');
+removeSelectedButton.textContent = 'Remove Selected';
+removeSelectedButton.addEventListener('click', removeSelectedParticipants);
+manageParticipantsPopup.appendChild(removeSelectedButton);
