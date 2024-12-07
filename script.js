@@ -1,6 +1,5 @@
 let participants = [];
 let winners = [];
-let originalParticipants = []; // New array to store the original participant list
 const ORIGINAL_PARTICIPANTS_URL = "participants.json";
 
 // Fetch participants
@@ -8,10 +7,7 @@ function loadParticipants() {
     fetch(ORIGINAL_PARTICIPANTS_URL)
         .then(response => response.json())
         .then(data => {
-            originalParticipants = data; // Store original list
-            participants = data.filter(p => 
-                !winners.some(winner => winner.name === p.name)
-            ); // Remove winners from participants
+            participants = data;
             renderPool();
         })
         .catch(error => console.error("Error loading participants:", error));
@@ -30,6 +26,7 @@ const addParticipantButton = document.getElementById("addParticipantButton");
 const winnerPopup = document.getElementById("winnerPopup");
 const winnerImage = document.getElementById("winnerImage");
 const winnerDetails = document.getElementById("winnerDetails");
+const removeFromPoolButton = document.querySelector("#winnerPopup button:first-of-type");
 const manageParticipantsPopup = document.getElementById("manageParticipants");
 const participantList = document.getElementById("participantList");
 const winnerListPopup = document.getElementById("winnerListPopup");
@@ -122,26 +119,42 @@ function drawParticipant() {
         
         winnerImage.style.backgroundImage = `url(images/${winner.classNumber}.jpeg)`;
         winnerDetails.textContent = `Name: ${winner.name}`;
+        
+        // Store the current winner without removing from pool
+        removeFromPoolButton.dataset.winnerName = winner.name;
+        
         winnerPopup.classList.remove("hidden");
+    }, 3000);
+}
 
-        // Remove winner from participants
-        participants = participants.filter(p => p.name !== winner.name);
+// Remove winner from pool
+function removeWinnerFromPool() {
+    const winnerName = removeFromPoolButton.dataset.winnerName;
+    const winner = participants.find(p => p.name === winnerName);
+    
+    if (winner) {
+        // Add to winners list
         winners.push(winner);
-
+        
+        // Remove from participants
+        participants = participants.filter(p => p.name !== winnerName);
+        
         // Re-render pool
         renderPool();
-    }, 3000);
+        
+        // Close winner popup
+        closePopup(winnerPopup);
+    }
 }
 
 // Reset Participants
 function resetParticipants() {
-    // Reload participants, excluding current winners
-    participants = originalParticipants.filter(p => 
-        !winners.some(winner => winner.name === p.name)
-    );
-
-    // Re-render pool
-    renderPool();
+    // Clear winners list
+    winners = [];
+    
+    // Reload original participants
+    loadParticipants();
+    
     manageParticipantsPopup.classList.add("hidden");
 }
 
@@ -218,7 +231,7 @@ function addNewParticipant() {
     if (nameInput.value && genderInput.value) {
         const newParticipant = {
             name: nameInput.value,
-            classNumber: (participants.length + originalParticipants.length + 1).toString(),
+            classNumber: (participants.length + 1).toString(),
             gender: genderInput.value
         };
         
@@ -244,3 +257,4 @@ drawButton.addEventListener("click", drawParticipant);
 viewPoolButton.addEventListener("click", viewParticipantsPool);
 viewWinnersButton.addEventListener("click", viewWinnersList);
 addParticipantButton.addEventListener("click", () => addParticipantPopup.classList.remove("hidden"));
+removeFromPoolButton.addEventListener("click", removeWinnerFromPool);
