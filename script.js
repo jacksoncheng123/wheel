@@ -36,22 +36,21 @@ const addParticipantPopup = document.getElementById("addParticipantPopup");
 function renderPool() {
     pool.innerHTML = ''; // Clear previous fishes
     
-    // Animate fish movement within pool
     participants.forEach((participant, index) => {
         const fish = document.createElement('div');
         fish.classList.add('fish');
         fish.dataset.name = participant.name;
         fish.dataset.index = index;
         fish.style.backgroundImage = `url(images/${participant.classNumber}.jpeg)`;
-        
+
         // Randomize initial position
         fish.style.left = `${Math.random() * (pool.clientWidth - 100)}px`;
         fish.style.top = `${Math.random() * (pool.clientHeight - 100)}px`;
-        
+
         // Create unique animation for each fish
         const uniqueAnimation = createUniqueAnimation(index);
         fish.style.animationName = uniqueAnimation;
-        
+
         pool.appendChild(fish);
     });
 }
@@ -59,8 +58,6 @@ function renderPool() {
 // Create unique animation for each fish
 function createUniqueAnimation(index) {
     const animationName = `swim-${index}`;
-    
-    // Create a style element for the unique animation
     const styleSheet = document.styleSheets[0];
     const keyframes = `@keyframes ${animationName} {
         0% { 
@@ -79,9 +76,7 @@ function createUniqueAnimation(index) {
             transform: translate(0, 0) rotate(${Math.random() * 10 - 5}deg);
         }
     }`;
-    
     styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
-    
     return animationName;
 }
 
@@ -93,7 +88,7 @@ function drawParticipant() {
     );
 
     if (genderFilteredParticipants.length === 0) {
-        alert("No participants available for selected gender!");
+        alert("No participants available for the selected gender!");
         return;
     }
 
@@ -116,52 +111,36 @@ function drawParticipant() {
         clearInterval(interval);
         const winnerIndex = Math.floor(Math.random() * genderFilteredParticipants.length);
         const winner = genderFilteredParticipants[winnerIndex];
-        
+
+        // Add winner to winners list (without removing from pool unless explicitly removed later)
+        if (!winners.find(w => w.name === winner.name)) {
+            winners.push(winner);
+        }
+
+        // Display winner in popup
         winnerImage.style.backgroundImage = `url(images/${winner.classNumber}.jpeg)`;
         winnerDetails.textContent = `Name: ${winner.name}`;
-        
-        // Store the current winner without removing from pool
         removeFromPoolButton.dataset.winnerName = winner.name;
-        
         winnerPopup.classList.remove("hidden");
     }, 3000);
 }
 
-// Remove winner from pool
-function removeWinnerFromPool() {
-    const winnerName = removeFromPoolButton.dataset.winnerName;
-    const winner = participants.find(p => p.name === winnerName);
-    
-    if (winner) {
-        // Add to winners list
-        winners.push(winner);
-        
-        // Remove from participants
-        participants = participants.filter(p => p.name !== winnerName);
-        
-        // Re-render pool
-        renderPool();
-        
-        // Close winner popup
-        closePopup(winnerPopup);
-    }
-}
-
 // Reset Participants
 function resetParticipants() {
-    // Clear winners list
-    winners = [];
-    
-    // Reload original participants
-    loadParticipants();
-    
+    fetch(ORIGINAL_PARTICIPANTS_URL)
+        .then(response => response.json())
+        .then(data => {
+            participants = data; // Reset participants
+            renderPool();
+        })
+        .catch(error => console.error("Error resetting participants:", error));
     manageParticipantsPopup.classList.add("hidden");
 }
 
 // View Participants Pool
 function viewParticipantsPool() {
-    participantList.innerHTML = ''; // Clear previous list
-    
+    participantList.innerHTML = '';
+
     participants.forEach((participant, index) => {
         const participantItem = document.createElement('div');
         participantItem.innerHTML = `
@@ -173,21 +152,17 @@ function viewParticipantsPool() {
         participantList.appendChild(participantItem);
     });
 
-    // Update popup title
     const popupTitle = manageParticipantsPopup.querySelector('h2');
     popupTitle.textContent = 'Manage Participants';
 
-    // Remove any existing buttons
     const existingButtons = manageParticipantsPopup.querySelectorAll('button:not(:last-child)');
     existingButtons.forEach(btn => btn.remove());
 
-    // Add Remove Selected button
     const removeSelectedButton = document.createElement('button');
     removeSelectedButton.textContent = 'Remove Selected';
     removeSelectedButton.addEventListener('click', removeSelectedParticipants);
     manageParticipantsPopup.insertBefore(removeSelectedButton, manageParticipantsPopup.lastElementChild);
 
-    // Add Reset button
     const resetButton = document.createElement('button');
     resetButton.textContent = 'Reset Participants';
     resetButton.addEventListener('click', resetParticipants);
@@ -199,27 +174,42 @@ function viewParticipantsPool() {
 // Remove Selected Participants
 function removeSelectedParticipants() {
     const selectedCheckboxes = document.querySelectorAll('.participant-checkbox:checked');
-    
-    // Create a new participants array excluding selected participants
+
     participants = participants.filter(participant => 
         !Array.from(selectedCheckboxes).some(checkbox => 
             checkbox.value === participant.name
         )
     );
 
-    // Re-render pool and close popup
     renderPool();
     manageParticipantsPopup.classList.add("hidden");
 }
 
 // View Winners List
 function viewWinnersList() {
-    const winnerListContent = document.querySelector("#winnerListPopup");
-    winnerListContent.innerHTML = `
-        <h2>Winner List</h2>
-        ${winners.map(winner => `<div>${winner.name}</div>`).join('')}
-        <button onclick="closePopup(document.getElementById('winnerListPopup'))">Close</button>
-    `;
+    winnerListPopup.innerHTML = '';
+
+    const title = document.createElement('h2');
+    title.textContent = "Winner List";
+    winnerListPopup.appendChild(title);
+
+    if (winners.length === 0) {
+        const noWinnersMessage = document.createElement('p');
+        noWinnersMessage.textContent = "No winners yet!";
+        winnerListPopup.appendChild(noWinnersMessage);
+    } else {
+        winners.forEach(winner => {
+            const winnerItem = document.createElement('div');
+            winnerItem.textContent = `${winner.name}`;
+            winnerListPopup.appendChild(winnerItem);
+        });
+    }
+
+    const closeButton = document.createElement('button');
+    closeButton.textContent = "Close";
+    closeButton.addEventListener("click", () => closePopup(winnerListPopup));
+    winnerListPopup.appendChild(closeButton);
+
     winnerListPopup.classList.remove("hidden");
 }
 
@@ -227,18 +217,17 @@ function viewWinnersList() {
 function addNewParticipant() {
     const nameInput = document.getElementById("participantName");
     const genderInput = document.getElementById("participantGender");
-    
+
     if (nameInput.value && genderInput.value) {
         const newParticipant = {
             name: nameInput.value,
             classNumber: (participants.length + 1).toString(),
             gender: genderInput.value
         };
-        
+
         participants.push(newParticipant);
         renderPool();
-        
-        // Close popup
+
         addParticipantPopup.classList.add("hidden");
         nameInput.value = '';
         genderInput.value = 'Male';
@@ -257,4 +246,4 @@ drawButton.addEventListener("click", drawParticipant);
 viewPoolButton.addEventListener("click", viewParticipantsPool);
 viewWinnersButton.addEventListener("click", viewWinnersList);
 addParticipantButton.addEventListener("click", () => addParticipantPopup.classList.remove("hidden"));
-removeFromPoolButton.addEventListener("click", removeWinnerFromPool);
+removeFromPoolButton.addEventListener("click", () => closePopup(winnerPopup));
