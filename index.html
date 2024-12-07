@@ -30,7 +30,7 @@
         <h2>Winner!</h2>
         <div id="winnerImage" class="winner-image"></div>
         <div id="winnerDetails"></div>
-        <button onclick="closePopup(document.getElementById('winnerPopup'))">Remove from pool</button>
+        <button onclick="removeWinnerFromPool()">Remove from pool</button>
         <button onclick="closePopup(document.getElementById('winnerPopup'))">Close</button>
     </div>
 
@@ -56,12 +56,15 @@
     <div id="manageParticipants" class="popup hidden">
         <h2>Participants Pool</h2>
         <div id="participantList" class="participant-list"></div>
+        <button onclick="removeSelectedParticipants()">Remove Selected</button>
+        <button id="resetParticipantsButton">Reset Participants</button>
         <button onclick="closePopup(document.getElementById('manageParticipants'))">Close</button>
     </div>
 
     <!-- Winner List Popup -->
     <div id="winnerListPopup" class="popup hidden">
         <h2>Winner List</h2>
+        <div id="winnerListContent"></div>
         <button onclick="closePopup(document.getElementById('winnerListPopup'))">Close</button>
     </div>
 
